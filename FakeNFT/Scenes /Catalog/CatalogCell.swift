@@ -5,6 +5,7 @@
 //  Created by Chingiz on 22.04.2024.
 //
 
+import Kingfisher
 import UIKit
 
 // MARK: - CatalogCell
@@ -14,7 +15,6 @@ final class CatalogCell: UITableViewCell {
     // MARK: - Public Properties
     
     static let reuseIdentifier = "CatalogCell"
-    private lazy var imageLoader = ImageLoader.shared
     
     // MARK: - Private Properties
     
@@ -30,7 +30,7 @@ final class CatalogCell: UITableViewCell {
     private lazy var collectionTitleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = .black
+        label.textColor = .segmentActive
         label.font = .bodyBold
         label.text = "Empty catalog (0)"
         return label
@@ -76,13 +76,22 @@ final class CatalogCell: UITableViewCell {
     
     func configure(with catalog: CatalogModel) {
         loadingIndicator.startAnimating()
-        imageLoader.loadImage(from: catalog.image) { [weak self] image in
-            DispatchQueue.main.async {
-                self?.coverCollectionImage.image = image ?? self?.defaultImage
-                self?.loadingIndicator.stopAnimating()
+        if let url = URL(string: catalog.cover) {
+            coverCollectionImage.kf.setImage(with: url) { [weak self] result in
+                switch result {
+                case .success(_):
+                    guard let self = self else { return }
+                    self.loadingIndicator.stopAnimating()
+                case .failure(let error):
+                    print("Error loading image: \(error.localizedDescription)")
+                    self?.loadingIndicator.stopAnimating()
+                }
             }
+        } else {
+            loadingIndicator.stopAnimating()
+            coverCollectionImage.image = defaultImage
         }
-        collectionTitleLabel.text = "\(catalog.title) (\(catalog.count))"
+        collectionTitleLabel.text = "\(catalog.name) (\(catalog.count))"
     }
     
     // MARK: - Private Methods

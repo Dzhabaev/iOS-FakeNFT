@@ -54,6 +54,6 @@ final class TabBarController: UITabBarController {
         ]
         
         tabBar.unselectedItemTintColor = .segmentActive
-        view.backgroundColor = UIColor(named: "whiteDayNight")
+        view.backgroundColor = .backgroundColorActive
     }
 }

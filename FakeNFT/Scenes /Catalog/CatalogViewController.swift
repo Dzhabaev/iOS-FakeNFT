@@ -5,6 +5,7 @@
 //  Created by Chingiz on 19.04.2024.
 //
 
+import ProgressHUD
 import UIKit
 
 // MARK: - CatalogViewController
@@ -13,12 +14,12 @@ final class CatalogViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let catalogProvider: CatalogProvider = CatalogProviderImpl()
+    private let catalogProvider: CatalogProvider = CatalogProviderImpl(networkClient: DefaultNetworkClient())
     private var catalogItems: [CatalogModel] = []
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "sort")?.withTintColor(.black), for: .normal)
+        button.setImage(UIImage(named: "sort")?.withTintColor(.segmentActive), for: .normal)
         button.addTarget(self, action: #selector(tapFiltersButton), for: .touchUpInside)
         return button
     }()
@@ -26,6 +27,7 @@ final class CatalogViewController: UIViewController {
     private lazy var catalogTableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .backgroundColorActive
         tableView.register(
             CatalogCell.self,
             forCellReuseIdentifier: CatalogCell.reuseIdentifier
@@ -39,7 +41,7 @@ final class CatalogViewController: UIViewController {
         super.viewDidLoad()
         
         setupLayout()
-        fetchCatalog()
+        fetchCollection()
     }
     
     // MARK: - Actions
@@ -78,11 +80,14 @@ final class CatalogViewController: UIViewController {
             catalogTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    private func fetchCatalog() {
-        catalogProvider.getCatalog { [weak self] catalogItems in
+    
+    private func fetchCollection() {
+        ProgressHUD.show()
+        catalogProvider.getCollection { [weak self] catalogItems in
             self?.catalogItems = catalogItems
             DispatchQueue.main.async {
                 self?.catalogTableView.reloadData()
+                ProgressHUD.dismiss()
             }
         }
     }
@@ -107,6 +112,8 @@ extension CatalogViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: CatalogCell.reuseIdentifier, for: indexPath) as! CatalogCell
         let catalogItem = catalogItems[indexPath.row]
         cell.configure(with: catalogItem)
+        cell.selectionStyle = .none
+        cell.backgroundColor = .backgroundColorActive
         return cell
     }
 }
