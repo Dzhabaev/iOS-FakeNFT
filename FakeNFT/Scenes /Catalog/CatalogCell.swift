@@ -14,6 +14,7 @@ final class CatalogCell: UITableViewCell {
     // MARK: - Public Properties
     
     static let reuseIdentifier = "CatalogCell"
+    private lazy var imageLoader = ImageLoader.shared
     
     // MARK: - Private Properties
     
@@ -53,6 +54,12 @@ final class CatalogCell: UITableViewCell {
         return image
     }()
     
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     // MARK: - Initializers
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -65,14 +72,32 @@ final class CatalogCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public Methods
+    
+    func configure(with catalog: CatalogModel) {
+        loadingIndicator.startAnimating()
+        imageLoader.loadImage(from: catalog.image) { [weak self] image in
+            DispatchQueue.main.async {
+                self?.coverCollectionImage.image = image ?? self?.defaultImage
+                self?.loadingIndicator.stopAnimating()
+            }
+        }
+        collectionTitleLabel.text = "\(catalog.title) (\(catalog.count))"
+    }
+    
     // MARK: - Private Methods
     
     private func setupLayout() {
-        contentView.addSubview(coverCollectionImage)
-        contentView.addSubview(collectionTitleLabel)
-        
-        coverCollectionImage.translatesAutoresizingMaskIntoConstraints = false
-        collectionTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        [
+            coverCollectionImage,
+            collectionTitleLabel,
+            loadingIndicator
+        ]
+            .forEach {
+                subview in
+                contentView.addSubview(subview)
+                subview.translatesAutoresizingMaskIntoConstraints = false
+            }
         
         NSLayoutConstraint.activate([
             coverCollectionImage.topAnchor.constraint(equalTo: topAnchor, constant: 20),
@@ -83,7 +108,10 @@ final class CatalogCell: UITableViewCell {
             
             collectionTitleLabel.topAnchor.constraint(equalTo: coverCollectionImage.bottomAnchor, constant: 4),
             collectionTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            collectionTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            collectionTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            
+            loadingIndicator.centerXAnchor.constraint(equalTo: coverCollectionImage.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: coverCollectionImage.centerYAnchor)
         ])
     }
 }

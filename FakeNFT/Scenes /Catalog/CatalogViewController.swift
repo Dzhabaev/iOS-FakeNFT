@@ -13,16 +13,17 @@ final class CatalogViewController: UIViewController {
     
     // MARK: - Private Properties
     
+    private let catalogProvider: CatalogProvider = CatalogProviderImpl()
     private var catalogItems: [CatalogModel] = []
     
-    private let filterButton: UIButton = {
+    private lazy var filterButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "sort")?.withTintColor(.black), for: .normal)
         button.addTarget(self, action: #selector(tapFiltersButton), for: .touchUpInside)
         return button
     }()
     
-    private let catalogTableView: UITableView = {
+    private lazy var catalogTableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.register(
@@ -38,6 +39,7 @@ final class CatalogViewController: UIViewController {
         super.viewDidLoad()
         
         setupLayout()
+        fetchCatalog()
     }
     
     // MARK: - Actions
@@ -51,11 +53,15 @@ final class CatalogViewController: UIViewController {
     // MARK: - Private Methods
     
     private func setupLayout() {
-        view.addSubview(filterButton)
-        view.addSubview(catalogTableView)
-        
-        filterButton.translatesAutoresizingMaskIntoConstraints = false
-        catalogTableView.translatesAutoresizingMaskIntoConstraints = false
+        [
+            filterButton,
+            catalogTableView
+        ]
+            .forEach {
+                subview in
+                view.addSubview(subview)
+                subview.translatesAutoresizingMaskIntoConstraints = false
+            }
         
         catalogTableView.delegate = self
         catalogTableView.dataSource = self
@@ -72,6 +78,14 @@ final class CatalogViewController: UIViewController {
             catalogTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    private func fetchCatalog() {
+        catalogProvider.getCatalog { [weak self] catalogItems in
+            self?.catalogItems = catalogItems
+            DispatchQueue.main.async {
+                self?.catalogTableView.reloadData()
+            }
+        }
+    }
 }
 
 // MARK: - UITableViewDelegate
@@ -86,12 +100,13 @@ extension CatalogViewController: UITableViewDelegate {
 
 extension CatalogViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return catalogItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CatalogCell.reuseIdentifier, for: indexPath) as! CatalogCell
-        cell.selectionStyle = .none
+        let catalogItem = catalogItems[indexPath.row]
+        cell.configure(with: catalogItem)
         return cell
     }
 }
