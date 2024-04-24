@@ -8,6 +8,14 @@
 import ProgressHUD
 import UIKit
 
+// MARK: - SortType
+
+enum SortType {
+    case none
+    case byName
+    case byQuantity
+}
+
 // MARK: - CatalogViewController
 
 final class CatalogViewController: UIViewController {
@@ -16,6 +24,7 @@ final class CatalogViewController: UIViewController {
     
     private let catalogProvider: CatalogProvider = CatalogProviderImpl(networkClient: DefaultNetworkClient())
     private var catalogItems: [CatalogModel] = []
+    private var sortType: SortType = .none
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()
@@ -48,8 +57,36 @@ final class CatalogViewController: UIViewController {
     
     @objc
     private func tapFiltersButton() {
-        // TODO: - Будет реализовано при выполнении задачи Catalog M1 Логика
-        print("Будет реализовано при выполнении задачи Catalog M1 Логика")
+        let action = UIAlertController(
+            title: NSLocalizedString("alert.sorting", comment: ""),
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        action.addAction(UIAlertAction(
+            title: NSLocalizedString("alert.byName", comment: ""),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.sortType = .byName
+                self?.sortCatalog()
+            }
+        ))
+        
+        action.addAction(UIAlertAction(
+            title: NSLocalizedString("alert.byQuantity", comment: ""),
+            style: .default,
+            handler: { [weak self] _ in
+                self?.sortType = .byQuantity
+                self?.sortCatalog()
+            }
+        ))
+        
+        action.addAction(UIAlertAction(
+            title: NSLocalizedString("alert.close", comment: ""),
+            style: .cancel
+        ))
+        
+        self.present(action, animated: true)
     }
     
     // MARK: - Private Methods
@@ -89,6 +126,19 @@ final class CatalogViewController: UIViewController {
                 self?.catalogTableView.reloadData()
                 ProgressHUD.dismiss()
             }
+        }
+    }
+    
+    private func sortCatalog() {
+        switch sortType {
+        case .none:
+            fetchCollection()
+        case .byName:
+            catalogItems.sort { $0.name < $1.name }
+            catalogTableView.reloadData()
+        case .byQuantity:
+            catalogItems.sort { $0.count > $1.count }
+            catalogTableView.reloadData()
         }
     }
 }
