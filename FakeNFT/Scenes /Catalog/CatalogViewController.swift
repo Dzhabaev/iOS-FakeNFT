@@ -149,6 +149,13 @@ extension CatalogViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 187
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let collectionDetailsVC = CollectionDetailsViewController()
+        collectionDetailsVC.modalPresentationStyle = .fullScreen
+        present(collectionDetailsVC, animated: true, completion: nil)
+    }
 }
 
 // MARK: - UITableViewDataSource
