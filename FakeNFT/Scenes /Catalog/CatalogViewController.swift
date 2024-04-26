@@ -5,16 +5,7 @@
 //  Created by Chingiz on 19.04.2024.
 //
 
-import ProgressHUD
 import UIKit
-
-// MARK: - SortType
-
-enum SortType {
-    case none
-    case byName
-    case byQuantity
-}
 
 // MARK: - CatalogViewController
 
@@ -22,7 +13,7 @@ final class CatalogViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private let catalogProvider: CatalogProvider = CatalogProviderImpl(networkClient: DefaultNetworkClient())
+    private let presenter = CatalogPresenter()
     private var catalogItems: [CatalogModel] = []
     private var sortType: SortType = .none
     
@@ -119,27 +110,15 @@ final class CatalogViewController: UIViewController {
     }
     
     private func fetchCollection() {
-        ProgressHUD.show()
-        catalogProvider.getCollection { [weak self] catalogItems in
+        presenter.fetchCollectionAndUpdate { [weak self] catalogItems in
             self?.catalogItems = catalogItems
-            DispatchQueue.main.async {
-                self?.catalogTableView.reloadData()
-                ProgressHUD.dismiss()
-            }
+            self?.catalogTableView.reloadData()
         }
     }
     
     private func sortCatalog() {
-        switch sortType {
-        case .none:
-            fetchCollection()
-        case .byName:
-            catalogItems.sort { $0.name < $1.name }
-            catalogTableView.reloadData()
-        case .byQuantity:
-            catalogItems.sort { $0.count > $1.count }
-            catalogTableView.reloadData()
-        }
+        catalogItems = presenter.sortCatalog(by: sortType)
+        catalogTableView.reloadData()
     }
 }
 
@@ -168,7 +147,7 @@ extension CatalogViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CatalogCell.reuseIdentifier, for: indexPath) as! CatalogCell
         let catalogItem = catalogItems[indexPath.row]
-        cell.configure(with: catalogItem)
+        cell.configure(with: catalogItem, imageLoader: CatalogProviderImpl(networkClient: DefaultNetworkClient()))
         cell.selectionStyle = .none
         cell.backgroundColor = .backgroundColorActive
         return cell

@@ -5,7 +5,6 @@
 //  Created by Chingiz on 22.04.2024.
 //
 
-import Kingfisher
 import UIKit
 
 // MARK: - CatalogCell
@@ -74,17 +73,14 @@ final class CatalogCell: UITableViewCell {
     
     // MARK: - Public Methods
     
-    func configure(with catalog: CatalogModel) {
+    func configure(with catalog: CatalogModel, imageLoader: ImageLoader) {
         loadingIndicator.startAnimating()
         if let url = URL(string: catalog.cover) {
-            coverCollectionImage.kf.setImage(with: url) { [weak self] result in
-                switch result {
-                case .success(_):
+            imageLoader.loadImage(from: url) { [weak self] image in
+                DispatchQueue.main.async {
                     guard let self = self else { return }
                     self.loadingIndicator.stopAnimating()
-                case .failure(let error):
-                    print("Error loading image: \(error.localizedDescription)")
-                    self?.loadingIndicator.stopAnimating()
+                    self.coverCollectionImage.image = image ?? self.defaultImage
                 }
             }
         } else {
