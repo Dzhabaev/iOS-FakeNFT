@@ -11,14 +11,14 @@
 ## Module 1:
 
 #### Верстка
-- Страницы корзины (est: 90 min; fact: x min).
-- Подтверждение удаления (est: 20 min; fact: x min).
+- Страницы корзины (est: 90 min; fact: 60 min).
+- Подтверждение удаления (est: 20 min; fact: 30 min).
 
 #### Логика
-- Сортировка (est: 80 min; fact: x min).
-- Сохранить способ сортировки (est: 20 min; fact: x min).
+- Сортировка (est: 80 min; fact: 30 min).
+- Сохранить способ сортировки (est: 20 min; fact: 10 min).
 
-`Total:` est: 210 min; fact: x min.
+`Total:` est: 210 min; fact: 140 min.
 
 
 ## Module 2:
