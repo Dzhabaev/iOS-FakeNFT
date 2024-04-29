@@ -32,6 +32,7 @@ final class CatalogViewController: UIViewController {
             CatalogCell.self,
             forCellReuseIdentifier: CatalogCell.reuseIdentifier
         )
+        tableView.refreshControl = refreshControl
         return tableView
     }()
     
@@ -39,6 +40,13 @@ final class CatalogViewController: UIViewController {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.hidesWhenStopped = true
         return indicator
+    }()
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .segmentActive
+        refreshControl.addTarget(self, action: #selector(refreshCatalog), for: .valueChanged)
+        return refreshControl
     }()
     
     // MARK: - UIViewController Lifecycle
@@ -86,6 +94,10 @@ final class CatalogViewController: UIViewController {
         self.present(action, animated: true)
     }
     
+    @objc private func refreshCatalog() {
+        fetchCollection()
+    }
+    
     // MARK: - Private Methods
     
     private func setupLayout() {
@@ -120,12 +132,15 @@ final class CatalogViewController: UIViewController {
     }
     
     private func fetchCollection() {
-        loadingIndicator.startAnimating()
+        if !refreshControl.isRefreshing {
+            loadingIndicator.startAnimating()
+        }
         presenter.fetchCollectionAndUpdate { [weak self] catalogItems in
             self?.loadingIndicator.stopAnimating()
             guard let self = self else { return }
             self.catalogItems = catalogItems
             self.catalogTableView.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
     
