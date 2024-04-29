@@ -35,6 +35,12 @@ final class CatalogViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     // MARK: - UIViewController Lifecycle
     
     override func viewDidLoad() {
@@ -85,7 +91,8 @@ final class CatalogViewController: UIViewController {
     private func setupLayout() {
         [
             filterButton,
-            catalogTableView
+            catalogTableView,
+            loadingIndicator
         ]
             .forEach {
                 subview in
@@ -105,14 +112,20 @@ final class CatalogViewController: UIViewController {
             catalogTableView.topAnchor.constraint(equalTo: filterButton.bottomAnchor),
             catalogTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             catalogTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            catalogTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            catalogTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     private func fetchCollection() {
+        loadingIndicator.startAnimating()
         presenter.fetchCollectionAndUpdate { [weak self] catalogItems in
-            self?.catalogItems = catalogItems
-            self?.catalogTableView.reloadData()
+            self?.loadingIndicator.stopAnimating()
+            guard let self = self else { return }
+            self.catalogItems = catalogItems
+            self.catalogTableView.reloadData()
         }
     }
     
@@ -145,7 +158,9 @@ extension CatalogViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CatalogCell.reuseIdentifier, for: indexPath) as! CatalogCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CatalogCell.reuseIdentifier, for: indexPath) as? CatalogCell else {
+            return UITableViewCell()
+        }
         let catalogItem = catalogItems[indexPath.row]
         cell.configure(with: catalogItem, imageLoader: CatalogProviderImpl(networkClient: DefaultNetworkClient()))
         cell.selectionStyle = .none

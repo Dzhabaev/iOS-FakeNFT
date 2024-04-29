@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ProgressHUD
 
 // MARK: - SortType
 
@@ -29,13 +28,10 @@ final class CatalogPresenter {
     // MARK: - Public Methods
     
     func fetchCollectionAndUpdate(completion: @escaping ([CatalogModel]) -> Void) {
-        ProgressHUD.show()
         catalogProvider.getCollection { [weak self] catalogItems in
-            self?.setCatalogItems(catalogItems)
-            DispatchQueue.main.async {
-                ProgressHUD.dismiss()
-                completion(catalogItems)
-            }
+            guard let self = self else { return }
+            self.setCatalogItems(catalogItems)
+            completion(catalogItems)
         }
     }
     
