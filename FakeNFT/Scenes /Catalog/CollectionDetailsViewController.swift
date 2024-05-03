@@ -75,12 +75,30 @@ final class CollectionDetailsViewController: UIViewController {
         return label
     }()
     
+    private lazy var authorCollectionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .segmentActive
+        label.font = .caption2
+        return label
+    }()
+    
+    private lazy var descriptionCollectionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.textColor = .segmentActive
+        label.font = .caption2
+        return label
+    }()
+    
     // MARK: - UIViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupLayout()
+        print(collection ?? "Ничего нет")
     }
     
     // MARK: - Actions
@@ -99,7 +117,9 @@ final class CollectionDetailsViewController: UIViewController {
             coverCollectionImage,
             backButton,
             loadingIndicator,
-            collectionTitleLabel
+            collectionTitleLabel,
+            authorCollectionLabel,
+            descriptionCollectionLabel
         ]
             .forEach {
                 subview in
@@ -124,7 +144,15 @@ final class CollectionDetailsViewController: UIViewController {
             
             collectionTitleLabel.topAnchor.constraint(equalTo: coverCollectionImage.bottomAnchor, constant: 16),
             collectionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            collectionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            authorCollectionLabel.topAnchor.constraint(equalTo: collectionTitleLabel.bottomAnchor, constant: 13),
+            authorCollectionLabel.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
+            authorCollectionLabel.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor),
+            
+            descriptionCollectionLabel.topAnchor.constraint(equalTo: authorCollectionLabel.bottomAnchor, constant: 5),
+            descriptionCollectionLabel.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
+            descriptionCollectionLabel.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor)
         ])
     }
     
@@ -143,5 +171,7 @@ final class CollectionDetailsViewController: UIViewController {
             coverCollectionImage.image = defaultImage
         }
         collectionTitleLabel.text = catalog.name
+        authorCollectionLabel.text = "Автор коллекции: \(catalog.author)"
+        descriptionCollectionLabel.text = catalog.description
     }
 }
