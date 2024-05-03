@@ -20,8 +20,7 @@ final class TabBarController: UITabBarController {
         // MARK: - CatalogViewController
         
         let catalogViewController = CatalogViewController()
-        let catalogNavigationController = UINavigationController(rootViewController: catalogViewController)
-        catalogNavigationController.tabBarItem = UITabBarItem(
+        catalogViewController.tabBarItem = UITabBarItem(
             title: NSLocalizedString("Tab.catalog", comment: ""),
             image: UIImage(systemName: "rectangle.stack.fill"),
             selectedImage: nil
@@ -49,12 +48,12 @@ final class TabBarController: UITabBarController {
         
         self.viewControllers = [
             profileNavigationController,
-            catalogNavigationController,
+            catalogViewController,
             cartNavigationController,
             statisticsNavigationController
         ]
         
-        tabBar.unselectedItemTintColor = UIColor(named: "blackDayNight")
-        view.backgroundColor = UIColor(named: "whiteDayNight")
+        tabBar.unselectedItemTintColor = .segmentActive
+        view.backgroundColor = .backgroundColorActive
     }
 }
