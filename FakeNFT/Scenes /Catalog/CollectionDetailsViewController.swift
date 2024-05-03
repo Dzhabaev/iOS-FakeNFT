@@ -67,6 +67,14 @@ final class CollectionDetailsViewController: UIViewController {
         return indicator
     }()
     
+    private lazy var collectionTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .segmentActive
+        label.font = .headline3
+        return label
+    }()
+    
     // MARK: - UIViewController Lifecycle
     
     override func viewDidLoad() {
@@ -90,7 +98,8 @@ final class CollectionDetailsViewController: UIViewController {
         [
             coverCollectionImage,
             backButton,
-            loadingIndicator
+            loadingIndicator,
+            collectionTitleLabel
         ]
             .forEach {
                 subview in
@@ -111,7 +120,11 @@ final class CollectionDetailsViewController: UIViewController {
             backButton.widthAnchor.constraint(equalToConstant: 24),
             
             loadingIndicator.centerXAnchor.constraint(equalTo: coverCollectionImage.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: coverCollectionImage.centerYAnchor)
+            loadingIndicator.centerYAnchor.constraint(equalTo: coverCollectionImage.centerYAnchor),
+            
+            collectionTitleLabel.topAnchor.constraint(equalTo: coverCollectionImage.bottomAnchor, constant: 16),
+            collectionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            collectionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
@@ -129,5 +142,6 @@ final class CollectionDetailsViewController: UIViewController {
             loadingIndicator.stopAnimating()
             coverCollectionImage.image = defaultImage
         }
+        collectionTitleLabel.text = catalog.name
     }
 }
