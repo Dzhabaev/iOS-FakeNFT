@@ -11,3 +11,4 @@
 "alert.byName" = "По названию";
 "alert.byQuantity" = "По количеству NFT";
 "alert.close" = "Закрыть";
+"authorCollectionLabel.text" = "Автор коллекции:";

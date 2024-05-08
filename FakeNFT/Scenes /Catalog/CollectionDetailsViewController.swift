@@ -24,6 +24,8 @@ final class CollectionDetailsViewController: UIViewController {
     
     // MARK: - Private Properties
     
+    private let presenter: CollectionDetailsViewControllerPresenter
+    
     private lazy var coverCollectionImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFill
@@ -80,6 +82,17 @@ final class CollectionDetailsViewController: UIViewController {
         label.numberOfLines = 0
         label.textColor = .segmentActive
         label.font = .caption2
+        label.text = NSLocalizedString("authorCollectionLabel.text", comment: "")
+        return label
+    }()
+    
+    private lazy var authorLinkLabel: UILabel = {
+        let label = UILabel()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(authorLinkTapped))
+        label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        label.textColor = .hyperlinkText
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(tapGesture)
         return label
     }()
     
@@ -92,19 +105,34 @@ final class CollectionDetailsViewController: UIViewController {
         return label
     }()
     
+    // MARK: - Initializers
+    
+    init(presenter: CollectionDetailsViewControllerPresenter) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - UIViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupLayout()
-        print(collection ?? "Ничего нет")
+        presenter.viewController = self
     }
     
     // MARK: - Actions
     
     @objc private func backButtonTapped() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func authorLinkTapped() {
+        presenter.authorLinkTapped()
     }
     
     // MARK: - Private Methods
@@ -119,6 +147,7 @@ final class CollectionDetailsViewController: UIViewController {
             loadingIndicator,
             collectionTitleLabel,
             authorCollectionLabel,
+            authorLinkLabel,
             descriptionCollectionLabel
         ]
             .forEach {
@@ -132,7 +161,6 @@ final class CollectionDetailsViewController: UIViewController {
             coverCollectionImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverCollectionImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             coverCollectionImage.heightAnchor.constraint(equalToConstant: 310),
-            
             
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 9),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 9),
@@ -148,7 +176,9 @@ final class CollectionDetailsViewController: UIViewController {
             
             authorCollectionLabel.topAnchor.constraint(equalTo: collectionTitleLabel.bottomAnchor, constant: 13),
             authorCollectionLabel.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
-            authorCollectionLabel.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor),
+            
+            authorLinkLabel.leadingAnchor.constraint(equalTo: authorCollectionLabel.trailingAnchor, constant: 4),
+            authorLinkLabel.bottomAnchor.constraint(equalTo: authorCollectionLabel.bottomAnchor),
             
             descriptionCollectionLabel.topAnchor.constraint(equalTo: authorCollectionLabel.bottomAnchor, constant: 5),
             descriptionCollectionLabel.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
@@ -171,7 +201,7 @@ final class CollectionDetailsViewController: UIViewController {
             coverCollectionImage.image = defaultImage
         }
         collectionTitleLabel.text = catalog.name
-        authorCollectionLabel.text = "Автор коллекции: \(catalog.author)"
+        authorLinkLabel.text = catalog.author
         descriptionCollectionLabel.text = catalog.description
     }
 }
