@@ -105,6 +105,22 @@ final class CollectionDetailsViewController: UIViewController {
         return label
     }()
     
+    private lazy var nftCollectionView: UICollectionView = {
+        let nftCollection = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: UICollectionViewFlowLayout()
+        )
+        nftCollection.isScrollEnabled = false
+        nftCollection.dataSource = self
+        nftCollection.delegate = self
+        nftCollection.backgroundColor = .backgroundColorActive
+        nftCollection.register(
+            CollectionDetailsNftCardCell.self,
+            forCellWithReuseIdentifier: CollectionDetailsNftCardCell.reuseIdentifier
+        )
+        return nftCollection
+    }()
+    
     // MARK: - Initializers
     
     init(presenter: CollectionDetailsViewControllerPresenter) {
@@ -148,7 +164,8 @@ final class CollectionDetailsViewController: UIViewController {
             collectionTitleLabel,
             authorCollectionLabel,
             authorLinkLabel,
-            descriptionCollectionLabel
+            descriptionCollectionLabel,
+            nftCollectionView
         ]
             .forEach {
                 subview in
@@ -182,7 +199,12 @@ final class CollectionDetailsViewController: UIViewController {
             
             descriptionCollectionLabel.topAnchor.constraint(equalTo: authorCollectionLabel.bottomAnchor, constant: 5),
             descriptionCollectionLabel.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
-            descriptionCollectionLabel.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor)
+            descriptionCollectionLabel.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor),
+            
+            nftCollectionView.topAnchor.constraint(equalTo: descriptionCollectionLabel.bottomAnchor, constant: 24),
+            nftCollectionView.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
+            nftCollectionView.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor),
+            nftCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
     }
     
@@ -203,5 +225,34 @@ final class CollectionDetailsViewController: UIViewController {
         collectionTitleLabel.text = catalog.name
         authorLinkLabel.text = catalog.author
         descriptionCollectionLabel.text = catalog.description
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension CollectionDetailsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 7
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionDetailsNftCardCell.reuseIdentifier, for: indexPath) as? CollectionDetailsNftCardCell else {
+            return UICollectionViewCell()
+        }
+        return cell
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension CollectionDetailsViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let interItemSpacing: CGFloat = 10
+        let width = (collectionView.bounds.width - 2 * interItemSpacing) / 3
+        return CGSize(width: width, height: 192)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
     }
 }
