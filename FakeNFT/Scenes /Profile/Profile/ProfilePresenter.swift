@@ -12,11 +12,9 @@ protocol ProfilePresenterProtocol: AnyObject {
     
     var provider: ProfileProviderProtocol? { get set}
 
-    //UI Event
     func viewDidLoad()
     func editBarButtonTapped()
-    
-    //Business Logic
+
     func fetchProfile()
 }
 
@@ -26,24 +24,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     var provider: ProfileProviderProtocol? 
 }
 
-//MARK: - Business Logic
+//MARK: - ProfilePresenterProtocol
 extension ProfilePresenter {
-    func fetchProfile() {
-        provider?.getProfile { [weak self] profile in
-            
-            guard let self else { return }
-            print("->", profile)
-            view?.showProfile(profile)
-            
-            let profileItems = self.provider?.getProfileItems() ?? []
-            view?.showProfileItems(profileItems)
-        }
-    }
-}
-
-//MARK: - Event Handler
-extension ProfilePresenter {
-    
+        
     func viewDidLoad() {
         fetchProfile()
     }
@@ -51,4 +34,26 @@ extension ProfilePresenter {
     func editBarButtonTapped() {
         view?.navigateToProfileEditScreen()
     }
+    
+    func fetchProfile() {
+        provider?.getProfile { [weak self] profile in
+            
+            guard let self else { return }
+            guard let profile else { return }
+            view?.showProfile(profile)
+            
+            let profileItems = getProfileItems(profile)
+            view?.showProfileItems(profileItems)
+        }
+    }
+    
+    func getProfileItems(_ profile: Profile) -> [ProfileItem] {
+        let data = [
+            ProfileItem(name: "Мои NFT (\(profile.nfts.count))"),
+            ProfileItem(name: "Избранные NFT (\(profile.likes.count))"),
+            ProfileItem(name: "О разработчике"),
+        ]
+        return data
+    }
 }
+

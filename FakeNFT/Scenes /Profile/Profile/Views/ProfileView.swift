@@ -7,12 +7,10 @@
 
 import UIKit
 
-
 final class ProfileView: UIView {
     
     private var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        //imageView.image = UIImage(named: "avatar")
         imageView.layer.cornerRadius = 35
         imageView.clipsToBounds = true
         imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
@@ -23,7 +21,6 @@ final class ProfileView: UIView {
     
     private var fullNameLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Joaquin Phoenix"
         label.font = UIFont.headline3
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -31,12 +28,6 @@ final class ProfileView: UIView {
     
     private var descriptionLabel: UILabel = {
         let label = UILabel()
-//        label.text = """
-//        Дизайнер из Казани, люблю цифровое искусство
-//        и бейглы. В моей коллекции уже 100+ NFT,
-//        и еще больше - на моем сайте. Открыт
-//        к коллаборациям.
-//        """
         label.font = UIFont.caption2
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +36,6 @@ final class ProfileView: UIView {
     
     private var websiteLabel: UILabel = {
         let label = UILabel()
-        //label.text = "Joaquin Phoenix.com"
         label.numberOfLines = 0
         label.font = UIFont.caption1
         label.textColor = UIColor.blue
@@ -84,14 +74,9 @@ extension ProfileView {
         fullNameLabel.text = profile.name
         descriptionLabel.text = profile.description
         websiteLabel.text = profile.website
-        
         let url = URL(string: profile.avatar)
         profileImageView.kf.setImage(with: url)
-    
-        
-        
     }
-    
 }
 
 extension ProfileView {

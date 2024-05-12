@@ -14,14 +14,11 @@ final class ProfileEditConfigurator {
         let profileEditProvider = ProfileProvider(networkClient: DefaultNetworkClient())
         let profileEditVC = ProfileEditViewController()
         let profileEditPresenter = ProfileEditPresenter()
-        
-        //Connections
-        
+
         profileEditVC.presenter = profileEditPresenter
         profileEditPresenter.view = profileEditVC
-        
         profileEditPresenter.provider = profileEditProvider
-        
+    
         profileEditVC.update(profile)
         
         return profileEditVC

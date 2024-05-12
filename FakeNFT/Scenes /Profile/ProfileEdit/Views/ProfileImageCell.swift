@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreImage
+import Kingfisher
 
 final class ProfileImageCell: UITableViewCell {
     
@@ -21,19 +22,14 @@ final class ProfileImageCell: UITableViewCell {
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
         label.font = UIFont.medium
         label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var photoImageView: UIImageView = {
         let imageView = UIImageView()
-        //imageView.image = UIImage(named: "avatar")
         imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        
         let image = UIImage(named: "avatar")
-        
         imageView.image = makeMonochrome(image)
         
         return imageView
@@ -44,11 +40,8 @@ final class ProfileImageCell: UITableViewCell {
         if let currentCGImage = image?.cgImage {
             
             let currentCIImage = CIImage(cgImage: currentCGImage)
-
             let filter = CIFilter(name: "CIColorMonochrome")
             filter?.setValue(currentCIImage, forKey: "inputImage")
-
-            // set a gray value for the tint color
             filter?.setValue(CIColor(red: 0.7, green: 0.7, blue: 0.7), forKey: "inputColor")
 
             filter?.setValue(1.0, forKey: "inputIntensity")
@@ -57,9 +50,6 @@ final class ProfileImageCell: UITableViewCell {
                 
                 if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
                     let processedImage = UIImage(cgImage: cgimg)
-                    print(processedImage.size)
-                    
-                    //imageView.image = processedImage
                     return processedImage
                 }
             }
@@ -79,14 +69,28 @@ final class ProfileImageCell: UITableViewCell {
     }
     
     func update(_ profile: Profile?) {
-        let image = UIImage(named: "avatar")
-        photoImageView.image = makeMonochrome(image)
+
+        guard let url = URL.init(string: profile?.avatar ?? "") else { return }
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            switch result {
+                
+            case .success(let imageResult):
+                self.photoImageView.image = self.makeMonochrome(imageResult.image)
+                self.photoImageView.layer.cornerRadius = 35
+                self.photoImageView.clipsToBounds = true
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     private func setupViews() {
-        //self.accessoryType = .disclosureIndicator
-        contentView.addSubview(photoImageView)
-        contentView.addSubview(photoLabel)
+        selectionStyle = .none
+        [photoImageView, photoLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
     }
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -97,14 +101,8 @@ final class ProfileImageCell: UITableViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            //itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            //itemLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
             photoLabel.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor),
             photoLabel.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor),
-            //photoLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
-            //photoLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-            
-            //itemLabel.center.constraint(equalTo: ite)
         ])
     }
 }

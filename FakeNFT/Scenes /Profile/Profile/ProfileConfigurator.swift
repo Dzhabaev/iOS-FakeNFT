@@ -14,8 +14,7 @@ final class ProfileConfigurator {
         let profileProvider = ProfileProvider(networkClient: DefaultNetworkClient())
         let profileVC = ProfileViewController()
         let profilePresenter = ProfilePresenter()
-        
-        //Connections
+
         profileVC.presenter = profilePresenter
         profilePresenter.view = profileVC
         profilePresenter.provider = profileProvider

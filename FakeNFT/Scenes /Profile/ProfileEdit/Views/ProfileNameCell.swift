@@ -17,22 +17,17 @@ final class ProfileNameCell: UITableViewCell {
         let label = UILabel()
         label.text = "Имя"
         label.font = UIFont.headline3
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var nameTextField: TextField = {
         let textField = TextField()
-        textField.text = "Joaquin Phoenix"
         textField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.layer.cornerRadius = 12
         textField.clipsToBounds = true
         textField.backgroundColor = UIColor.yaLightGrayLight
         textField.font = UIFont.bodyRegular
-        
         textField.addTarget(self, action: #selector(nameTextFieldChanged(_:)), for: .editingChanged)
-        
         return textField
     }()
     
@@ -41,7 +36,6 @@ final class ProfileNameCell: UITableViewCell {
         button.setImage(UIImage(named: "clear"), for: .normal)
         button.widthAnchor.constraint(equalToConstant: 17).isActive = true
         button.heightAnchor.constraint(equalToConstant: 17).isActive = true
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(nil, action: #selector(clearButtonTapped), for: .touchUpInside)
         button.tintColor = .black
         return button
@@ -59,7 +53,6 @@ final class ProfileNameCell: UITableViewCell {
     }
     
     @objc func clearButtonTapped() {
-        print(#function)
         nameTextField.text = ""
     }
     
@@ -71,12 +64,13 @@ final class ProfileNameCell: UITableViewCell {
         let nameText = nameTextField.text ?? ""
         onProfileNameChanged?(nameText)
     }
-    
-    
+
     private func setupViews() {
-        contentView.addSubview(itemLabel)
-        contentView.addSubview(nameTextField)
-        contentView.addSubview(clearButton)
+        selectionStyle = .none
+        [itemLabel, nameTextField, clearButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
     }
     private func setupConstraints() {
        
@@ -96,22 +90,5 @@ final class ProfileNameCell: UITableViewCell {
             clearButton.centerYAnchor.constraint(equalTo: nameTextField.centerYAnchor),
             clearButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16)
         ])
-    }
-}
-
-class TextField: UITextField {
-
-    let padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-
-    override open func textRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: padding)
-    }
-
-    override open func editingRect(forBounds bounds: CGRect) -> CGRect {
-        return bounds.inset(by: padding)
     }
 }

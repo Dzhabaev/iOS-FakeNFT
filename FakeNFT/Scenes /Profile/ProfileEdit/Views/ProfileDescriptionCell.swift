@@ -17,32 +17,24 @@ final class ProfileDescriptionCell: UITableViewCell, UITextViewDelegate {
         let label = UILabel()
         label.text = "Описание"
         label.font = UIFont.headline3
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var descriptionTextView: UITextView = {
         let textView = UITextView()
-        //textField.text = "Joaquin Phoenix.com"
         textView.heightAnchor.constraint(equalToConstant: 132).isActive = true
-        textView.translatesAutoresizingMaskIntoConstraints = false
         textView.layer.cornerRadius = 12
         textView.clipsToBounds = true
         textView.backgroundColor = UIColor.yaLightGrayLight
         textView.font = UIFont.bodyRegular
         textView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
-        
-        //textView.addTarget(self, action: #selector(descriptionTextFieldChanged(_:)), for: .editingChanged)
         textView.delegate = self
         
         return textView
     }()
     
     func textViewDidChange(_ textView: UITextView) {
-       
-        
         let descriptionText = textView.text ?? ""
-        
         onProfileDescriptionChanged?(descriptionText)
     }
 
@@ -62,8 +54,11 @@ final class ProfileDescriptionCell: UITableViewCell, UITextViewDelegate {
     }
     
     private func setupViews() {
-        contentView.addSubview(itemLabel)
-        contentView.addSubview(descriptionTextView)
+        selectionStyle = .none
+        [itemLabel, descriptionTextView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
     }
     private func setupConstraints() {
         NSLayoutConstraint.activate([

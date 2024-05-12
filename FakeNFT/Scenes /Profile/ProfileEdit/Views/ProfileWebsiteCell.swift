@@ -17,22 +17,17 @@ final class ProfileWebsiteCell: UITableViewCell {
         let label = UILabel()
         label.text = "Сайт"
         label.font = UIFont.headline3
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var websiteTextField: TextField = {
         let textField = TextField()
-        textField.text = "Joaquin Phoenix.com"
         textField.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.layer.cornerRadius = 12
         textField.clipsToBounds = true
         textField.backgroundColor = UIColor.yaLightGrayLight
         textField.font = UIFont.bodyRegular
-        
         textField.addTarget(self, action: #selector(websiteTextFieldChanged(_:)), for: .editingChanged)
-        
         return textField
     }()
     
@@ -41,7 +36,6 @@ final class ProfileWebsiteCell: UITableViewCell {
         button.setImage(UIImage(named: "clear"), for: .normal)
         button.widthAnchor.constraint(equalToConstant: 17).isActive = true
         button.heightAnchor.constraint(equalToConstant: 17).isActive = true
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(nil, action: #selector(clearButtonTapped), for: .touchUpInside)
         button.tintColor = .black
         return button
@@ -54,7 +48,6 @@ final class ProfileWebsiteCell: UITableViewCell {
     }
     
     @objc func clearButtonTapped() {
-        print(#function)
         websiteTextField.text = ""
     }
 
@@ -74,10 +67,13 @@ final class ProfileWebsiteCell: UITableViewCell {
     }
     
     private func setupViews() {
-        contentView.addSubview(itemLabel)
-        contentView.addSubview(websiteTextField)
-        contentView.addSubview(clearButton)
+        selectionStyle = .none
+        [itemLabel, websiteTextField, clearButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
     }
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),

@@ -11,9 +11,6 @@ protocol ProfileEditViewControllerProtocol: AnyObject {
     
     var presenter: ProfileEditPresenterProtocol? { get set }
     
-    //Update View
-    
-    //Navigation
     func closeProfileEditScreen()
     func showSaveAlert()
 }
@@ -28,17 +25,16 @@ final class ProfileEditViewController: UIViewController, ProfileEditViewControll
     }
     
     var profile: Profile?
-    
     var presenter: ProfileEditPresenterProtocol?
-    var profileProvider: ProfileProviderProtocol? //= ProfileProvider(networkClient: DefaultNetworkClient())
+    var profileProvider: ProfileProviderProtocol?
     
     private var closeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "close"), for: .normal)
         button.widthAnchor.constraint(equalToConstant: 42).isActive = true
         button.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(nil, action: #selector(closeButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .black
         return button
     }()
@@ -52,10 +48,8 @@ final class ProfileEditViewController: UIViewController, ProfileEditViewControll
         tableView.register(ProfileNameCell.self, forCellReuseIdentifier: ProfileNameCell.reusdeId)
         tableView.register(ProfileDescriptionCell.self, forCellReuseIdentifier: ProfileDescriptionCell.reusdeId)
         tableView.register(ProfileWebsiteCell.self, forCellReuseIdentifier: ProfileWebsiteCell.reusdeId)
-
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 300, right: 0)
         
         return tableView
@@ -63,13 +57,9 @@ final class ProfileEditViewController: UIViewController, ProfileEditViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupViews()
         setupConstraints()
-        
-        presenter?.viewDidLoad()
     }
-    
 }
 
 extension ProfileEditViewController {
@@ -79,16 +69,12 @@ extension ProfileEditViewController {
     }
 }
 
-//MARK: - Navigation
+//MARK: - ProfileEditViewControllerProtocol
 extension ProfileEditViewController {
     
     func closeProfileEditScreen() {
         dismiss(animated: true)
     }
-}
-
-//MARK: - Event Handler
-extension ProfileEditViewController {
     
     func showSaveAlert() {
         let alert = UIAlertController(title: "Сохранить данные профиля?", message: "", preferredStyle: .alert)
@@ -105,27 +91,26 @@ extension ProfileEditViewController {
          
         self.present(alert, animated: true)
     }
-    
+}
+
+//MARK: - Event Handler
+extension ProfileEditViewController {
     @objc func closeButtonTapped() {
         presenter?.closeButtonTapped()
     }
 }
 
-//MARK: - TableView Delegate & Datasource
+//MARK: - UITableViewDataSource
 extension ProfileEditViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        //profileItems.count
         return ProfileEditType.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let type = ProfileEditType(rawValue: indexPath.row) {
-            
             switch type {
-                
             case .photo:
                 
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileImageCell.reusdeId, for: indexPath) as? ProfileImageCell else { return UITableViewCell() }
@@ -139,9 +124,7 @@ extension ProfileEditViewController: UITableViewDelegate, UITableViewDataSource 
                 
                 cell.onProfileNameChanged = { [weak self] nameText in
                     guard let self else { return }
-                    print("->", nameText)
-                    
-                    self.profile?.name = nameText
+                    self.profile?.updateName(nameText)
                 }
                 
                 return cell
@@ -152,10 +135,7 @@ extension ProfileEditViewController: UITableViewDelegate, UITableViewDataSource 
                 
                 cell.onProfileDescriptionChanged = { [weak self] descriptionText in
                     guard let self else { return }
-                    
-                    print("->", descriptionText)
-                    
-                    self.profile?.description = descriptionText
+                    self.profile?.updateDescription(descriptionText)
                 }
                 
                 return cell
@@ -166,10 +146,7 @@ extension ProfileEditViewController: UITableViewDelegate, UITableViewDataSource 
                 
                 cell.onProfileWebsiteChanged = { [weak self] websiteText in
                     guard let self else { return }
-                    
-                    print("->", websiteText)
-                    
-                    self.profile?.website = websiteText
+                    self.profile?.updateWebsite(websiteText)
                 }
                 
                 return cell
@@ -179,16 +156,18 @@ extension ProfileEditViewController: UITableViewDelegate, UITableViewDataSource 
     }
 }
 
-
 extension ProfileEditViewController {
     
-    func setupViews() {
+    private func setupViews() {
         view.backgroundColor = .white
-        view.addSubview(closeButton)
-        view.addSubview(tableView)
+
+        [tableView, closeButton].forEach {
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
@@ -200,5 +179,4 @@ extension ProfileEditViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
-    
 }
