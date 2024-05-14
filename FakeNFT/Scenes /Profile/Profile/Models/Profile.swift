@@ -9,29 +9,47 @@ import Foundation
 
 struct Profile: Codable {
     
-    var id: String
+    let id: String
+    let name: String
+    let avatar: String
+    let description: String
+    let website: String
+    let nfts: [String]
+    let likes: [String]
     
-    var name: String
-    var avatar: String
-    var description: String
-    var website: String
-    
-    var nfts: [String]
-    var likes: [String]
+    func updateName(_ newName: String) -> Profile {
+           .init(
+               id: id,
+               name: newName,
+               avatar: avatar,
+               description: description,
+               website: website,
+               nfts: nfts,
+               likes: likes
+           )
+       }
+
+       func updateDescription(_ newDescription: String) -> Profile {
+           .init(
+               id: id,
+               name: name,
+               avatar: avatar,
+               description: newDescription,
+               website: website,
+               nfts: nfts,
+               likes: likes
+           )
+       }
+
+       func updateWebsite(_ newWebsite: String) -> Profile {
+           .init(
+               id: id,
+               name: name,
+               avatar: avatar,
+               description: description,
+               website: newWebsite,
+               nfts: nfts,
+               likes: likes
+           )
+       }
 }
-
-
-
-//struct Profile {
-//    
-//    var avatar = "avatar"
-//    var fullName = "Joaquin Phoenix"
-//    var description = """
-//        Дизайнер из Казани, люблю цифровое искусство
-//        и бейглы. В моей коллекции уже 100+ NFT,
-//        и еще больше - на моем сайте. Открыт
-//        к коллаборациям.
-//        """
-//    var website = "Joaquin Phoenix.com"
-//}
-

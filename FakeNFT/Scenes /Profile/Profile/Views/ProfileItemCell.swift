@@ -13,7 +13,6 @@ final class ProfileItemCell: UITableViewCell {
     
     private var itemLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Joaquin Phoenix"
         label.font = UIFont.bodyBold
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -44,9 +43,11 @@ final class ProfileItemCell: UITableViewCell {
     }
     
     private func setupViews() {
-        //self.accessoryType = .disclosureIndicator
-        contentView.addSubview(itemLabel)
-        contentView.addSubview(disclosureImageView)
+        selectionStyle = .none
+        [itemLabel, disclosureImageView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
     }
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -57,12 +58,8 @@ final class ProfileItemCell: UITableViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            //itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            //itemLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
             disclosureImageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
             disclosureImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-            
-            //itemLabel.center.constraint(equalTo: ite)
         ])
     }
 }

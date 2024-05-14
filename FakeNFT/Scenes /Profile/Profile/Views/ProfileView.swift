@@ -6,14 +6,15 @@
 //
 
 import UIKit
-
+import Kingfisher
 
 final class ProfileView: UIView {
     
     private var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        //imageView.image = UIImage(named: "avatar")
         imageView.layer.cornerRadius = 35
+        let image = UIImage(named: "avatar")
+        imageView.image = image
         imageView.clipsToBounds = true
         imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
@@ -23,7 +24,6 @@ final class ProfileView: UIView {
     
     private var fullNameLabel: UILabel = {
         let label = UILabel()
-//        label.text = "Joaquin Phoenix"
         label.font = UIFont.headline3
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -31,12 +31,6 @@ final class ProfileView: UIView {
     
     private var descriptionLabel: UILabel = {
         let label = UILabel()
-//        label.text = """
-//        Дизайнер из Казани, люблю цифровое искусство
-//        и бейглы. В моей коллекции уже 100+ NFT,
-//        и еще больше - на моем сайте. Открыт
-//        к коллаборациям.
-//        """
         label.font = UIFont.caption2
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +39,6 @@ final class ProfileView: UIView {
     
     private var websiteLabel: UILabel = {
         let label = UILabel()
-        //label.text = "Joaquin Phoenix.com"
         label.numberOfLines = 0
         label.font = UIFont.caption1
         label.textColor = UIColor.blue
@@ -72,7 +65,6 @@ final class ProfileView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
 
 extension ProfileView {
@@ -84,14 +76,21 @@ extension ProfileView {
         fullNameLabel.text = profile.name
         descriptionLabel.text = profile.description
         websiteLabel.text = profile.website
-        
-        let url = URL(string: profile.avatar)
-        profileImageView.kf.setImage(with: url)
-    
-        
-        
+        guard let url = URL(string: profile.avatar) else { return }
+
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            switch result {
+                
+            case .success(let imageResult):
+                self.profileImageView.image = imageResult.image
+                self.profileImageView.layer.cornerRadius = 35
+                self.profileImageView.clipsToBounds = true
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
-    
 }
 
 extension ProfileView {
@@ -100,19 +99,19 @@ extension ProfileView {
         NSLayoutConstraint.activate([
             horizontalStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
             horizontalStackView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
-            horizontalStackView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 16),
+            horizontalStackView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
         ])
         
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 20),
             descriptionLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
-            descriptionLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 16),
+            descriptionLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
         ])
         
         NSLayoutConstraint.activate([
             websiteLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
             websiteLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
-            websiteLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 16),
+            websiteLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
             websiteLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
         ])
     }

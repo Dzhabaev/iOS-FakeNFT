@@ -11,11 +11,8 @@ protocol ProfileEditViewControllerProtocol: AnyObject {
     
     var presenter: ProfileEditPresenterProtocol? { get set }
     
-    //Update View
-    
-    //Navigation
     func closeProfileEditScreen()
-    func showSaveAlert()
+    func showSaveAlert(_ profile: Profile)
 }
 
 final class ProfileEditViewController: UIViewController, ProfileEditViewControllerProtocol {
@@ -27,18 +24,16 @@ final class ProfileEditViewController: UIViewController, ProfileEditViewControll
         case website
     }
     
-    var profile: Profile?
-    
     var presenter: ProfileEditPresenterProtocol?
-    var profileProvider: ProfileProviderProtocol? //= ProfileProvider(networkClient: DefaultNetworkClient())
+    var profileProvider: ProfileProviderProtocol?
     
     private var closeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "close"), for: .normal)
         button.widthAnchor.constraint(equalToConstant: 42).isActive = true
         button.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(nil, action: #selector(closeButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .black
         return button
     }()
@@ -48,14 +43,13 @@ final class ProfileEditViewController: UIViewController, ProfileEditViewControll
         tableView.delegate = self
         tableView.dataSource = self
         
-        tableView.register(ProfileImageCell.self, forCellReuseIdentifier: ProfileImageCell.reusdeId)
-        tableView.register(ProfileNameCell.self, forCellReuseIdentifier: ProfileNameCell.reusdeId)
-        tableView.register(ProfileDescriptionCell.self, forCellReuseIdentifier: ProfileDescriptionCell.reusdeId)
-        tableView.register(ProfileWebsiteCell.self, forCellReuseIdentifier: ProfileWebsiteCell.reusdeId)
-
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorStyle = .none
+        tableView.register(ProfileImageCell.self)
+        tableView.register(ProfileNameCell.self)
+        tableView.register(ProfileDescriptionCell.self)
+        tableView.register(ProfileWebsiteCell.self)
         
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 300, right: 0)
         
         return tableView
@@ -63,39 +57,24 @@ final class ProfileEditViewController: UIViewController, ProfileEditViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupViews()
         setupConstraints()
-        
-        presenter?.viewDidLoad()
-    }
-    
-}
-
-extension ProfileEditViewController {
-    func update(_ profile: Profile?) {
-        self.profile = profile
-        tableView.reloadData()
     }
 }
 
-//MARK: - Navigation
+//MARK: - ProfileEditViewControllerProtocol
 extension ProfileEditViewController {
     
     func closeProfileEditScreen() {
         dismiss(animated: true)
     }
-}
-
-//MARK: - Event Handler
-extension ProfileEditViewController {
     
-    func showSaveAlert() {
+    func showSaveAlert(_ profile: Profile) {
         let alert = UIAlertController(title: "Сохранить данные профиля?", message: "", preferredStyle: .alert)
          
         alert.addAction(UIAlertAction(title: "Да", style: .default, handler: { [weak self] action in
             guard let self else { return }
-            presenter?.alertSaveOkTapped(profile)
+            self.presenter?.alertSaveOkTapped(profile)
             
         }))
         alert.addAction(UIAlertAction(title: "Нет", style: .cancel, handler: { [weak self] action in
@@ -105,90 +84,85 @@ extension ProfileEditViewController {
          
         self.present(alert, animated: true)
     }
-    
+}
+
+//MARK: - Event Handler
+extension ProfileEditViewController {
     @objc func closeButtonTapped() {
         presenter?.closeButtonTapped()
     }
 }
 
-//MARK: - TableView Delegate & Datasource
+//MARK: - UITableViewDataSource
 extension ProfileEditViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        //profileItems.count
         return ProfileEditType.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if let type = ProfileEditType(rawValue: indexPath.row) {
+        let type = ProfileEditType(rawValue: indexPath.row)
+        switch type {
+        case .photo:
+
+            let cell = ProfileImageCell()
+            cell.update(presenter?.getProfile())
             
-            switch type {
-                
-            case .photo:
-                
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileImageCell.reusdeId, for: indexPath) as? ProfileImageCell else { return UITableViewCell() }
-                cell.update(profile)
-                
-                return cell
-            case .name:
-                
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileNameCell.reusdeId, for: indexPath) as? ProfileNameCell else { return UITableViewCell() }
-                cell.update(profile)
-                
-                cell.onProfileNameChanged = { [weak self] nameText in
-                    guard let self else { return }
-                    print("->", nameText)
-                    
-                    self.profile?.name = nameText
-                }
-                
-                return cell
-                
-            case .description:
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileDescriptionCell.reusdeId, for: indexPath) as? ProfileDescriptionCell else { return UITableViewCell() }
-                cell.update(profile)
-                
-                cell.onProfileDescriptionChanged = { [weak self] descriptionText in
-                    guard let self else { return }
-                    
-                    print("->", descriptionText)
-                    
-                    self.profile?.description = descriptionText
-                }
-                
-                return cell
-                
-            case .website:
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileWebsiteCell.reusdeId, for: indexPath) as? ProfileWebsiteCell else { return UITableViewCell() }
-                cell.update(profile)
-                
-                cell.onProfileWebsiteChanged = { [weak self] websiteText in
-                    guard let self else { return }
-                    
-                    print("->", websiteText)
-                    
-                    self.profile?.website = websiteText
-                }
-                
-                return cell
+            return cell
+        case .name:
+
+            let cell = ProfileNameCell()
+            cell.update(presenter?.getProfile())
+            
+            cell.onProfileNameChanged = { [weak self] nameText in
+                guard let self else { return }
+                self.presenter?.profileNameTextFieldChanged(nameText)
             }
+            
+            return cell
+            
+        case .description:
+
+            let cell = ProfileDescriptionCell()
+            cell.update(presenter?.getProfile())
+            
+            cell.onProfileDescriptionChanged = { [weak self] descriptionText in
+                guard let self else { return }
+                self.presenter?.profileDescriptionTextFieldChanged(descriptionText)
+            }
+            
+            return cell
+            
+        case .website:
+            
+            let cell = ProfileWebsiteCell()
+            cell.update(presenter?.getProfile())
+            
+            cell.onProfileWebsiteChanged = { [weak self] websiteText in
+                guard let self else { return }
+                self.presenter?.profileWebsiteTextFieldChanged(websiteText)
+            }
+            
+            return cell
+        default: return UITableViewCell()
+            
         }
-        return UITableViewCell()
     }
 }
 
-
 extension ProfileEditViewController {
     
-    func setupViews() {
+    private func setupViews() {
         view.backgroundColor = .white
-        view.addSubview(closeButton)
-        view.addSubview(tableView)
+
+        [tableView, closeButton].forEach {
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
@@ -200,5 +174,4 @@ extension ProfileEditViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
-    
 }

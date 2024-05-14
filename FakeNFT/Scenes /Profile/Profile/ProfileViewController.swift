@@ -6,17 +6,17 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol ProfileViewControllerProtocol: AnyObject {
     
     var presenter: ProfilePresenterProtocol? { get set }
-   
-    //Update View
+
     func showProfile(_ profile: Profile?)
     func showProfileItems(_ profileItems: [ProfileItem])
-    
-    //Navigation
+
     func navigateToProfileEditScreen()
+    func navigateToMyNFTScreen()
 }
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
@@ -33,8 +33,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ProfileItemCell.self, forCellReuseIdentifier: ProfileItemCell.reusdeId)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
+        tableView.isScrollEnabled = false
         return tableView
     }()
     
@@ -45,9 +45,19 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         setupViews()
         setupConstraints()
         
+        observe()
         presenter?.viewDidLoad()
-        
-        NotificationCenter.default.addObserver(forName: Notification.Name("ProfileUpdatedNotification"), object: nil, queue: nil) { notification in
+    }
+}
+
+//MARK: - Observe
+extension ProfileViewController {
+    
+    func observe() {
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("ProfileUpdatedNotification"),
+            object: nil,
+            queue: nil) { notification in
             
             if let data = notification.userInfo as? [String: Profile] {
                 let profile = data["profile"]
@@ -58,10 +68,13 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     }
 }
 
-//MARK: - Update View
+//MARK: - ProfileViewControllerProtocol
 extension ProfileViewController {
     
     func showProfile(_ profile: Profile?) {
+        
+        ProgressHUD.dismiss()
+        
         self.profile = profile
         profileView.update(profile)
         tableView.reloadData()
@@ -71,10 +84,21 @@ extension ProfileViewController {
         self.profileItems = profileItems
         tableView.reloadData()
     }
+    
+    func navigateToProfileEditScreen() {
+        let profileEditVC = ProfileEditConfigurator().configure(profile)
+        present(profileEditVC, animated: true)
+    }
+    
+    func navigateToMyNFTScreen() {
+        //TODO: navigate to MyNFT
+        //let myNftVC = MyNFTConfigurator().configure()
+        //navigationController?.pushViewController(myNftVC, animated: true)
+    }
 
 }
 
-extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
+extension ProfileViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         profileItems.count
@@ -89,39 +113,49 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension ProfileViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let profileItem = profileItems[indexPath.row]
+        
+        if profileItem.name.contains("Мои NFT") {
+            presenter?.myNFTCellSelected()
+        }
+    }
+}
+
+
 //MARK: - Event Handler
 extension ProfileViewController {
     
     @objc func editBarButtonTapped() {
         presenter?.editBarButtonTapped()
     }
-    
-}
-//MARK: - Navigation
-extension ProfileViewController {
-    
-    func navigateToProfileEditScreen() {
-        var profileEditVC = ProfileEditConfigurator().configure(profile) //ProfileEditViewController()
-        
-        present(profileEditVC, animated: true)
-    }
 }
 
 extension ProfileViewController {
     
-    func setupNavigationBar() {
-        var editBarButton = UIBarButtonItem.init(image: UIImage(named: "edit"), style: .done, target: self, action: #selector(editBarButtonTapped) )
+    private func setupNavigationBar() {
+        let editBarButton = UIBarButtonItem.init(image: UIImage(named: "edit"), style: .done, target: self, action: #selector(editBarButtonTapped) )
         editBarButton.tintColor = .black
         navigationItem.rightBarButtonItem = editBarButton
     }
     
-    func setupViews() {
-        profileView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(profileView)
-        view.addSubview(tableView)
+    private func setupViews() {
+        ProgressHUD.animationType = .circleRotateChase
+        ProgressHUD.colorAnimation = .black
+        ProgressHUD.show()
+        
+        [
+            profileView,
+            tableView
+        ].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             profileView.topAnchor.constraint(equalTo: view.topAnchor, constant: 88),
             profileView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),

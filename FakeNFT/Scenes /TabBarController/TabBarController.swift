@@ -9,7 +9,7 @@ final class TabBarController: UITabBarController {
         
         // MARK: - ProfileViewController
         
-        let profileViewController = ProfileConfigurator().configure() //ProfileViewController()
+        let profileViewController = ProfileConfigurator().configure()
         let profileNavigationController = UINavigationController(rootViewController: profileViewController)
         profileNavigationController.tabBarItem = UITabBarItem(
             title: NSLocalizedString("Tab.profile", comment: ""),
