@@ -1,5 +1,7 @@
 import Foundation
 
+
+
 typealias NftCompletion = (Result<Nft, Error>) -> Void
 
 protocol NftService {
