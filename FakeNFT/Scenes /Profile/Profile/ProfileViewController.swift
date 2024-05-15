@@ -91,9 +91,8 @@ extension ProfileViewController {
     }
     
     func navigateToMyNFTScreen() {
-        //TODO: navigate to MyNFT
-        //let myNftVC = MyNFTConfigurator().configure()
-        //navigationController?.pushViewController(myNftVC, animated: true)
+        let myNftVC = MyNFTConfigurator().configure()
+        navigationController?.pushViewController(myNftVC, animated: true)
     }
 
 }
