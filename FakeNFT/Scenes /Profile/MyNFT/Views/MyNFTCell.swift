@@ -21,7 +21,6 @@ final class MyNFTCell: UITableViewCell, ReuseIdentifying {
     
     private lazy var likeImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.isHidden = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "like-off")
         imageView.widthAnchor.constraint(equalToConstant: 42).isActive = true
@@ -51,6 +50,7 @@ final class MyNFTCell: UITableViewCell, ReuseIdentifying {
     
     private lazy var authorLabel: UILabel = {
         let label = UILabel()
+        label.text = "От John Doe"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .caption2
         label.textColor = .black
@@ -125,11 +125,12 @@ final class MyNFTCell: UITableViewCell, ReuseIdentifying {
             
             contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 144),
-            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -128),
+            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -148),
             ratingStackView.heightAnchor.constraint(equalToConstant: 12),
            
             priceStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            priceStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -39)
+            priceStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -39),
+            priceStackView.widthAnchor.constraint(equalToConstant: 95)
         ])
     }
     
@@ -138,7 +139,6 @@ final class MyNFTCell: UITableViewCell, ReuseIdentifying {
     func update(_ item: Item) {
         nameLabel.text = item.name
         priceValueLabel.text = String(format: "%.2f ETH", item.price)
-        authorLabel.text = "от \(item.author)"
         ratingStackView.setupRating(rating: item.rating)
         guard
             let imageUrlString = item.images.first,

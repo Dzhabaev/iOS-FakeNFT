@@ -9,7 +9,11 @@ import UIKit
 
 final class AlertComponent {
     
-    func makeSortingAlert(priceAction: @escaping () -> Void, ratingAction: @escaping () -> Void, nameAction: @escaping () -> Void) -> UIAlertController {
+    func makeSortingAlert(
+        priceAction: @escaping () -> Void,
+        ratingAction: @escaping () -> Void,
+        nameAction: @escaping () -> Void
+    ) -> UIAlertController {
         
         let sortAlert = UIAlertController(
             title: "Сортировка",
@@ -38,10 +42,10 @@ final class AlertComponent {
             title: "Закрыть",
             style: .cancel
         )
-        sortAlert.addAction(atPriceAction)
-        sortAlert.addAction(atRatingAction)
-        sortAlert.addAction(atNameAction)
-        sortAlert.addAction(closeAction)
+        
+        [atPriceAction, atRatingAction, atNameAction, closeAction].forEach {
+            sortAlert.addAction($0)
+        }
         return sortAlert
     }
 }

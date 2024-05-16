@@ -21,13 +21,11 @@ final class NFTNetworkService  {
     
     private func handleResult<T>(_ result: Result<T, Error>, completion: @escaping (Result<T, Error>) -> Void) {
         
-        switch result {
-        case .success(let success):
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            switch result {
+            case .success(let success):
                 completion(.success(success))
-            }
-        case .failure(let failure):
-            DispatchQueue.main.async {
+            case .failure(let failure):
                 completion(.failure(failure))
             }
         }

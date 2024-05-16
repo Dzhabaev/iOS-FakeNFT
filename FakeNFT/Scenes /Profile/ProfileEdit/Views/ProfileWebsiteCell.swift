@@ -103,5 +103,10 @@ extension ProfileWebsiteCell: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         clearButton.isHidden = true
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        websiteTextField.endEditing(true)
+        return false
+    }
 }
 

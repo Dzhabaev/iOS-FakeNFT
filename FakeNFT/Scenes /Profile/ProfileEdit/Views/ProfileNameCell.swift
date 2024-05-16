@@ -102,4 +102,9 @@ extension ProfileNameCell: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         clearButton.isHidden = true
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        nameTextField.endEditing(true)
+        return false
+    }
 }

@@ -34,12 +34,10 @@ final class MyNFTPresenter {
 // MARK: - MyNFTPresenterProtocol
 
 extension MyNFTPresenter: MyNFTPresenterProtocol {
+    
     func viewDidLoad() {
-        
         view?.showProgressHUB()
-        
         networkService?.getMyNft { [weak self] result in
-            
             guard let self else { return }
             switch result {
             case .success(let nftItems):
@@ -58,13 +56,13 @@ extension MyNFTPresenter: MyNFTPresenterProtocol {
     }
     
     private func sortByPrice() {
-        nftItems.sort { $0.price < $1.price }
+        nftItems.sort { $0.price > $1.price }
         view?.updateUI()
         cartSortService?.saveSortType(.byPrice)
     }
     
     private func sortByRating() {
-        nftItems.sort { $0.rating < $1.rating }
+        nftItems.sort { $0.rating > $1.rating }
         view?.updateUI()
         cartSortService?.saveSortType(.byRating)
     }

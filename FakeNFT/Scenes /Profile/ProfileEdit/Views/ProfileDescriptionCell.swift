@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ProfileDescriptionCell: UITableViewCell, UITextViewDelegate, ReuseIdentifying {
+final class ProfileDescriptionCell: UITableViewCell, ReuseIdentifying {
     
     var onProfileDescriptionChanged: ((String)->())?
     
@@ -27,15 +27,9 @@ final class ProfileDescriptionCell: UITableViewCell, UITextViewDelegate, ReuseId
         textView.font = UIFont.bodyRegular
         textView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         textView.delegate = self
-        
         return textView
     }()
     
-    func textViewDidChange(_ textView: UITextView) {
-        let descriptionText = textView.text ?? ""
-        onProfileDescriptionChanged?(descriptionText)
-    }
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -71,4 +65,21 @@ final class ProfileDescriptionCell: UITableViewCell, UITextViewDelegate, ReuseId
             descriptionTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -22)
         ])
     }
+}
+
+extension ProfileDescriptionCell: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let descriptionText = textView.text ?? ""
+        onProfileDescriptionChanged?(descriptionText)
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            if(text == "\n") {
+                textView.resignFirstResponder()
+                return false
+            }
+            return true
+        }
+    
 }

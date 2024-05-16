@@ -14,9 +14,7 @@ struct Item: Codable, Equatable {
     let rating: Int
     let description: String
     let price: Double
-    let author: String
     let id: String
-    var likes: Bool? = false
 }
 
 
