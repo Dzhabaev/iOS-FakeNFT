@@ -8,7 +8,6 @@
 import Foundation
 import SafariServices
 
-
 // MARK: - CollectionDetailsViewControllerProtocol
 
 protocol CollectionDetailsViewControllerProtocol {

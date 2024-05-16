@@ -146,13 +146,7 @@ final class CollectionDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupLayout()
-        presenter.viewController = self
-        presenter.setOnLoadCompletion { [weak self] in
-            self?.reloadCollectionView()
-        }
-        presenter.processNFTsLoading()
+        setupViewDidLoad()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -177,6 +171,15 @@ final class CollectionDetailsViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    
+    private func setupViewDidLoad() {
+        setupLayout()
+        presenter.viewController = self
+        presenter.setOnLoadCompletion { [weak self] in
+            self?.reloadCollectionView()
+        }
+        presenter.processNFTsLoading()
+    }
     
     private func setupLayout() {
         
