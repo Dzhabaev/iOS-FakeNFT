@@ -75,8 +75,9 @@ final class MyNFTViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .white
-        view.addSubview(tableView)
-        view.addSubview(emptyLabel)
+        [tableView, emptyLabel].forEach {
+            view.addSubview($0)
+        }
     }
     
     @objc
