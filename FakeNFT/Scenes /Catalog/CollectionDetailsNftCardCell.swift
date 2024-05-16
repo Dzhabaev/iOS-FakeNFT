@@ -163,6 +163,7 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             nameLabel.trailingAnchor.constraint(equalTo: cartButton.leadingAnchor),
             
             priceLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            priceLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
             priceLabel.trailingAnchor.constraint(equalTo: cartButton.leadingAnchor)
         ])

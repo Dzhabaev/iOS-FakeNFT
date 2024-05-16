@@ -30,6 +30,7 @@ final class CollectionDetailsViewController: UIViewController {
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.delegate = self
         return scrollView
     }()
     
@@ -148,11 +149,10 @@ final class CollectionDetailsViewController: UIViewController {
         
         setupLayout()
         presenter.viewController = self
-        
-        nftCollectionViewHeightConstraint = nftCollectionView.heightAnchor.constraint(equalToConstant: 0)
-        nftCollectionViewHeightConstraint.isActive = true
-        
-        scrollView.delegate = self
+        presenter.setOnLoadCompletion { [weak self] in
+            self?.reloadCollectionView()
+        }
+        presenter.processNFTsLoading()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -172,11 +172,17 @@ final class CollectionDetailsViewController: UIViewController {
         presenter.authorLinkTapped()
     }
     
+    func reloadCollectionView() {
+        nftCollectionView.reloadData()
+    }
+    
     // MARK: - Private Methods
     
     private func setupLayout() {
         
         view.backgroundColor = .backgroundColorActive
+        nftCollectionViewHeightConstraint = nftCollectionView.heightAnchor.constraint(equalToConstant: 0)
+        nftCollectionViewHeightConstraint.isActive = true
         
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -271,13 +277,15 @@ final class CollectionDetailsViewController: UIViewController {
 
 extension CollectionDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return presenter.nftArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionDetailsNftCardCell.reuseIdentifier, for: indexPath) as? CollectionDetailsNftCardCell else {
             return UICollectionViewCell()
         }
+        let nft = presenter.returnCollectionCell(for: indexPath.row)
+        cell.configure(data: nft)
         return cell
     }
 }
@@ -288,7 +296,7 @@ extension CollectionDetailsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let interItemSpacing: CGFloat = 10
         let width = (collectionView.bounds.width - 2 * interItemSpacing) / 3
-        return CGSize(width: width, height: 192)
+        return CGSize(width: width, height: 202)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
