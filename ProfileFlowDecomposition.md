@@ -39,13 +39,10 @@
 - Избранное NFT (нулевой экран) (est: 60 min; fact: x min).
 
 #### Логика
-Запрос на получение избранных NFT токенов (est: 60 min; fact: x min).
-Запрос на лайк (est: 60 min; fact: x min).
+- Запрос на получение избранных NFT токенов (est: 60 min; fact: x min).
+- Запрос на лайк (est: 60 min; fact: x min).
 
 `Total:` est: 420 min; fact: x min.
-
-
-
 
 ### Общая оценка времени
 `Total: ` est: 1560 min; fact: x min.
