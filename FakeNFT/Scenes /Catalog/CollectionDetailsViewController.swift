@@ -21,10 +21,19 @@ final class CollectionDetailsViewController: UIViewController {
         }
     }
     
-    
     // MARK: - Private Properties
     
     private let presenter: CollectionDetailsViewControllerPresenter
+    
+    private var nftCollectionViewHeightConstraint: NSLayoutConstraint!
+    
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+    
+    private lazy var containerView = UIView()
     
     private lazy var coverCollectionImage: UIImageView = {
         let image = UIImageView()
@@ -139,7 +148,19 @@ final class CollectionDetailsViewController: UIViewController {
         
         setupLayout()
         presenter.viewController = self
+        
+        nftCollectionViewHeightConstraint = nftCollectionView.heightAnchor.constraint(equalToConstant: 0)
+        nftCollectionViewHeightConstraint.isActive = true
+        
+        scrollView.delegate = self
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        nftCollectionView.layoutIfNeeded()
+        nftCollectionViewHeightConstraint.constant = nftCollectionView.contentSize.height
+    }
+    
     
     // MARK: - Actions
     
@@ -157,26 +178,43 @@ final class CollectionDetailsViewController: UIViewController {
         
         view.backgroundColor = .backgroundColorActive
         
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
         [
             coverCollectionImage,
-            backButton,
-            loadingIndicator,
             collectionTitleLabel,
             authorCollectionLabel,
             authorLinkLabel,
             descriptionCollectionLabel,
-            nftCollectionView
+            nftCollectionView,
+            backButton,
+            loadingIndicator
         ]
             .forEach {
                 subview in
-                view.addSubview(subview)
+                containerView.addSubview(subview)
                 subview.translatesAutoresizingMaskIntoConstraints = false
             }
         
         NSLayoutConstraint.activate([
-            coverCollectionImage.topAnchor.constraint(equalTo: view.topAnchor),
-            coverCollectionImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            coverCollectionImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            coverCollectionImage.topAnchor.constraint(equalTo: containerView.topAnchor),
+            coverCollectionImage.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            coverCollectionImage.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             coverCollectionImage.heightAnchor.constraint(equalToConstant: 310),
             
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 9),
@@ -184,12 +222,12 @@ final class CollectionDetailsViewController: UIViewController {
             backButton.heightAnchor.constraint(equalToConstant: 24),
             backButton.widthAnchor.constraint(equalToConstant: 24),
             
-            loadingIndicator.centerXAnchor.constraint(equalTo: coverCollectionImage.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: coverCollectionImage.centerYAnchor),
+            loadingIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             
             collectionTitleLabel.topAnchor.constraint(equalTo: coverCollectionImage.bottomAnchor, constant: 16),
-            collectionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionTitleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            collectionTitleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             
             authorCollectionLabel.topAnchor.constraint(equalTo: collectionTitleLabel.bottomAnchor, constant: 13),
             authorCollectionLabel.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
@@ -204,7 +242,7 @@ final class CollectionDetailsViewController: UIViewController {
             nftCollectionView.topAnchor.constraint(equalTo: descriptionCollectionLabel.bottomAnchor, constant: 24),
             nftCollectionView.leadingAnchor.constraint(equalTo: collectionTitleLabel.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: collectionTitleLabel.trailingAnchor),
-            nftCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            nftCollectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
     
@@ -225,6 +263,7 @@ final class CollectionDetailsViewController: UIViewController {
         collectionTitleLabel.text = catalog.name
         authorLinkLabel.text = catalog.author
         descriptionCollectionLabel.text = catalog.description
+        nftCollectionView.reloadData()
     }
 }
 
@@ -254,5 +293,15 @@ extension CollectionDetailsViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension CollectionDetailsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            scrollView.contentOffset.y = 0
+        }
     }
 }
