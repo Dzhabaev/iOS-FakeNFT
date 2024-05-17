@@ -112,12 +112,10 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             likeButton,
             ratingStackView,
             containerView
-        ]
-            .forEach {
-                subview in
-                contentView.addSubview(subview)
-                subview.translatesAutoresizingMaskIntoConstraints = false
-            }
+        ].forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         NSLayoutConstraint.activate([
             
@@ -145,12 +143,10 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             nameLabel,
             priceLabel,
             cartButton
-        ]
-            .forEach {
-                subview in
-                containerView.addSubview(subview)
-                subview.translatesAutoresizingMaskIntoConstraints = false
-            }
+        ].forEach {
+            containerView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         NSLayoutConstraint.activate([
             
@@ -181,19 +177,12 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     }
     
     private func setLikeButtonState(isLiked: Bool) {
-        if isLiked {
-            likeButton.tintColor = UIColor(hexString: "F56B6C")
-        } else {
-            likeButton.tintColor = .white
-        }
+        likeButton.tintColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
     }
     
     private func setCartButtonState(isAdded: Bool) {
-        if isAdded {
-            cartButton.setImage(UIImage(named: "cartDelete")?.withTintColor(.label), for: .normal)
-        } else {
-            cartButton.setImage(UIImage(named: "cartAdd")?.withTintColor(.label), for: .normal)
-        }
+        let imageName = isAdded ? "cartDelete" : "cartAdd"
+        cartButton.setImage(UIImage(named: imageName)?.withTintColor(.label), for: .normal)
     }
     
     private func setRatingStars(_ rating: Int) {
@@ -202,12 +191,7 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         }
         
         for (index, starImageView) in arrangedSubviews.enumerated() {
-            if index < rating {
-                starImageView.tintColor = UIColor(hexString: "FEEF0D")
-            } else {
-                starImageView.tintColor = .segmentInactive
-            }
+            starImageView.tintColor = index < rating ? UIColor(hexString: "FEEF0D") : .segmentInactive
         }
     }
 }
-

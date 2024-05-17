@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - CollectionDetailsViewController
 
-final class CollectionDetailsViewController: UIViewController {
+final class CollectionDetailsViewController: UIViewController, ErrorView {
     
     var collection: CatalogModel? {
         didSet {
@@ -24,8 +24,8 @@ final class CollectionDetailsViewController: UIViewController {
     // MARK: - Private Properties
     
     private let presenter: CollectionDetailsViewControllerPresenter
-    
-    private var nftCollectionViewHeightConstraint: NSLayoutConstraint!
+    private var nfts: [Nft] = []
+    private var nftCollectionViewHeightConstraint: NSLayoutConstraint?
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -74,7 +74,7 @@ final class CollectionDetailsViewController: UIViewController {
     }()
     
     private lazy var loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
+        let indicator = UIActivityIndicatorView(style: .large)
         indicator.hidesWhenStopped = true
         return indicator
     }()
@@ -149,13 +149,6 @@ final class CollectionDetailsViewController: UIViewController {
         setupViewDidLoad()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        nftCollectionView.layoutIfNeeded()
-        nftCollectionViewHeightConstraint.constant = nftCollectionView.contentSize.height
-    }
-    
-    
     // MARK: - Actions
     
     @objc private func backButtonTapped() {
@@ -163,8 +156,12 @@ final class CollectionDetailsViewController: UIViewController {
     }
     
     @objc private func authorLinkTapped() {
-        presenter.authorLinkTapped()
+        let webViewController = WebViewController(urlString: presenter.authorURLString)
+        webViewController.modalPresentationStyle = .fullScreen
+        present(webViewController, animated: true, completion: nil)
     }
+    
+    // MARK: - Public Methods
     
     func reloadCollectionView() {
         nftCollectionView.reloadData()
@@ -175,17 +172,27 @@ final class CollectionDetailsViewController: UIViewController {
     private func setupViewDidLoad() {
         setupLayout()
         presenter.viewController = self
-        presenter.setOnLoadCompletion { [weak self] in
+        presenter.setOnLoadCompletion { [weak self] nfts in
+            self?.nfts = nfts
             self?.reloadCollectionView()
+            self?.updateCollectionViewHeight()
         }
         presenter.processNFTsLoading()
+    }
+    
+    private func updateCollectionViewHeight() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.nftCollectionView.layoutIfNeeded()
+            self.nftCollectionViewHeightConstraint?.constant = self.nftCollectionView.contentSize.height
+        }
     }
     
     private func setupLayout() {
         
         view.backgroundColor = .backgroundColorActive
         nftCollectionViewHeightConstraint = nftCollectionView.heightAnchor.constraint(equalToConstant: 0)
-        nftCollectionViewHeightConstraint.isActive = true
+        nftCollectionViewHeightConstraint?.isActive = true
         
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -201,12 +208,10 @@ final class CollectionDetailsViewController: UIViewController {
             nftCollectionView,
             backButton,
             loadingIndicator
-        ]
-            .forEach {
-                subview in
-                containerView.addSubview(subview)
-                subview.translatesAutoresizingMaskIntoConstraints = false
-            }
+        ].forEach {
+            containerView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         NSLayoutConstraint.activate([
             
@@ -280,7 +285,7 @@ final class CollectionDetailsViewController: UIViewController {
 
 extension CollectionDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter.nftArray.count
+        return nfts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

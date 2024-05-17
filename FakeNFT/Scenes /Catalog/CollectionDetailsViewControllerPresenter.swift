@@ -6,13 +6,6 @@
 //
 
 import Foundation
-import SafariServices
-
-// MARK: - CollectionDetailsViewControllerProtocol
-
-protocol CollectionDetailsViewControllerProtocol {
-    func authorLinkTapped()
-}
 
 // MARK: - CollectionDetailsViewControllerPresenter
 
@@ -21,29 +14,23 @@ final class CollectionDetailsViewControllerPresenter {
     typealias Completion = (Result<Nft, Error>) -> Void
     
     weak var viewController: CollectionDetailsViewController?
-    var nftArray: [Nft] = []
+    let authorURLString = "https://practicum.yandex.ru/ios-developer/"
     
-    private var onLoadCompletion: (() -> Void)?
+    private var onLoadCompletion: (([Nft]) -> Void)?
     private var authorURL: String = ""
     private var idLikes: Set<String> = []
     private var idAddedToCart: Set<String> = []
     private let nftModel: CatalogModel
     private let nftService: NftService
+    private var loadedNFTs: [Nft] = []
     
     init(nftModel: CatalogModel, nftService: NftService) {
         self.nftModel = nftModel
         self.nftService = nftService
     }
     
-    func authorLinkTapped() {
-        if let collectionCoverURLString = viewController?.collection?.cover, let url = URL(string: collectionCoverURLString) {
-            let safariViewController = SFSafariViewController(url: url)
-            viewController?.present(safariViewController, animated: true)
-        }
-    }
-    
     func returnCollectionCell(for index: Int) -> CollectionCellModel {
-        let nftForIndex = nftArray[index]
+        let nftForIndex = loadedNFTs[index]
         return CollectionCellModel(image: nftForIndex.images[0],
                                    name: nftForIndex.name,
                                    rating: nftForIndex.rating,
@@ -73,15 +60,36 @@ final class CollectionDetailsViewControllerPresenter {
             guard let self = self else { return }
             switch result {
             case .success(let nft):
-                self.nftArray.append(nft)
-                self.onLoadCompletion?()
+                self.loadedNFTs.append(nft)
+                self.onLoadCompletion?(self.loadedNFTs)
             case .failure(let error):
-                print("Failed to load NFT with id: \(id), error: \(error)")
+                let errorModel = self.makeErrorModel(error, option: {self.loadNftById(id: id)})
+                viewController?.showError(errorModel)
             }
         }
     }
     
-    func setOnLoadCompletion(_ completion: @escaping () -> Void) {
+    func setOnLoadCompletion(_ completion: @escaping ([Nft]) -> Void) {
         onLoadCompletion = completion
+    }
+}
+
+//MARK: - Error handling
+
+extension CollectionDetailsViewControllerPresenter {
+    private func makeErrorModel(_ error: Error, option: (()->Void)?) -> ErrorModel {
+        let message: String
+        switch error {
+        case is NetworkClientError:
+            message = "Произошла ошибка сети"
+        default:
+            message = "Произошла неизвестная ошибка"
+        }
+        let actionText = "Повторить"
+        return ErrorModel(message: message, actionText: actionText) {
+            if let option {
+                option()
+            }
+        }
     }
 }
