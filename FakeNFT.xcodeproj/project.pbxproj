@@ -41,6 +41,10 @@
 		3FC8C38B29D242E90081F015 /* ProductDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C38A29D242E90081F015 /* ProductDetailsTableViewCell.swift */; };
 		3FC8C39129D2453B0081F015 /* ExampleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C39029D2453B0081F015 /* ExampleRequest.swift */; };
 		3FC8C39329D246BA0081F015 /* DateFormatters+Presets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */; };
+		7210C6CB2BF7589C002BBAB9 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7210C6CA2BF7589C002BBAB9 /* WebViewController.swift */; };
+		727F02B42BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727F02B32BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift */; };
+		727F02B62BED59DC00E3C5E8 /* CollectionDetailsNftCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727F02B52BED59DB00E3C5E8 /* CollectionDetailsNftCardCell.swift */; };
+		727F02B82BED6E9300E3C5E8 /* CollectionCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727F02B72BED6E9300E3C5E8 /* CollectionCellModel.swift */; };
 		72C24F212BDAE859007FA876 /* CollectionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */; };
 		72C24F232BDAF74A007FA876 /* CatalogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */; };
 		72C64DF02BD7BF3D001AA24B /* CatalogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */; };
@@ -111,6 +115,10 @@
 		3FC8C38A29D242E90081F015 /* ProductDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		3FC8C39029D2453B0081F015 /* ExampleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleRequest.swift; sourceTree = "<group>"; };
 		3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatters+Presets.swift"; sourceTree = "<group>"; };
+		7210C6CA2BF7589C002BBAB9 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		727F02B32BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsViewControllerPresenter.swift; sourceTree = "<group>"; };
+		727F02B52BED59DB00E3C5E8 /* CollectionDetailsNftCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsNftCardCell.swift; sourceTree = "<group>"; };
+		727F02B72BED6E9300E3C5E8 /* CollectionCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionCellModel.swift; sourceTree = "<group>"; };
 		72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsViewController.swift; sourceTree = "<group>"; };
 		72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenter.swift; sourceTree = "<group>"; };
 		72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogProvider.swift; sourceTree = "<group>"; };
@@ -197,8 +205,12 @@
 			isa = PBXGroup;
 			children = (
 				72F081AB2BD2F3C500058C94 /* CatalogViewController.swift */,
-				72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */,
 				72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */,
+				72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */,
+				727F02B52BED59DB00E3C5E8 /* CollectionDetailsNftCardCell.swift */,
+				727F02B32BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift */,
+				7210C6CA2BF7589C002BBAB9 /* WebViewController.swift */,
+				727F02B72BED6E9300E3C5E8 /* CollectionCellModel.swift */,
 				72D7DDE22BD65F3300CCD735 /* CatalogCell.swift */,
 				72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */,
 				72C64DF72BD84BF8001AA24B /* CollectionsRequest.swift */,
@@ -577,12 +589,14 @@
 				3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */,
 				0C79EE662A76DDFF00EE90EA /* NftDetailViewController.swift in Sources */,
 				E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */,
+				727F02B62BED59DC00E3C5E8 /* CollectionDetailsNftCardCell.swift in Sources */,
 				3F478ED129DB476500F6D39E /* Fonts.swift in Sources */,
 				0C79EE6A2A76DE1000EE90EA /* NftDetailAssembly.swift in Sources */,
 				3FC8C39329D246BA0081F015 /* DateFormatters+Presets.swift in Sources */,
 				0CFCB7422A78013E0009A829 /* Nft.swift in Sources */,
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
+				727F02B42BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift in Sources */,
 				72C64DF62BD84318001AA24B /* NetworkConstants.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* NftService.swift in Sources */,
@@ -596,8 +610,10 @@
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,
+				727F02B82BED6E9300E3C5E8 /* CollectionCellModel.swift in Sources */,
 				72D7DDE52BD6723900CCD735 /* CatalogModel.swift in Sources */,
 				3FC8C39129D2453B0081F015 /* ExampleRequest.swift in Sources */,
+				7210C6CB2BF7589C002BBAB9 /* WebViewController.swift in Sources */,
 				0CFCB7462A78064B0009A829 /* NftDetailCellModel.swift in Sources */,
 				0CFCB74B2A780EA80009A829 /* UIView+Constraints.swift in Sources */,
 				3F6806D729CBC50A00B4F915 /* CellsReusingUtils.swift in Sources */,
