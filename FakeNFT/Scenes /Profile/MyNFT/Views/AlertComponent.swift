@@ -9,6 +9,17 @@ import UIKit
 
 final class AlertComponent {
     
+    func makeErrorAlert(with message: String) -> UIAlertController {
+        let errorAlert = UIAlertController(
+            title: "Произошла ошибка!",
+            message: message,
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .cancel)
+        errorAlert.addAction(okAction)
+        return errorAlert
+    }
+    
     func makeSortingAlert(
         priceAction: @escaping () -> Void,
         ratingAction: @escaping () -> Void,
