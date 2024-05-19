@@ -100,7 +100,18 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     }
     
     @objc private func cartTapped() {
-        // TODO: - Catalog Module 3: User Interaction
+        let cartNetwork = CartNetwork()
+        cartNetwork.getCart { [weak self] cart in
+            guard let self = self, let cart = cart else { return }
+            
+            let isItemInCart = cart.nfts.contains(self.itemId)
+            
+            if isItemInCart {
+                self.removeItemFromCart(cartNetwork, cart)
+            } else {
+                self.addItemToCart(cartNetwork, cart)
+            }
+        }
     }
     
     // MARK: - Private Methods
@@ -192,6 +203,36 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         
         for (index, starImageView) in arrangedSubviews.enumerated() {
             starImageView.tintColor = index < rating ? UIColor(hexString: "FEEF0D") : .segmentInactive
+        }
+    }
+    
+    private func removeItemFromCart(_ cartNetwork: CartNetwork, _ cart: Cart) {
+        var updatedNfts = cart.nfts
+        if let index = updatedNfts.firstIndex(of: self.itemId) {
+            updatedNfts.remove(at: index)
+        }
+        cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
+            if let error = error {
+                return
+            }
+            DispatchQueue.main.async {
+                self.setCartButtonState(isAdded: false)
+                self.isItemInCart = false
+            }
+        }
+    }
+    
+    private func addItemToCart(_ cartNetwork: CartNetwork, _ cart: Cart) {
+        var updatedNfts = cart.nfts
+        updatedNfts.append(self.itemId)
+        cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
+            if let error = error {
+                return
+            }
+            DispatchQueue.main.async {
+                self.setCartButtonState(isAdded: true)
+                self.isItemInCart = true
+            }
         }
     }
 }
