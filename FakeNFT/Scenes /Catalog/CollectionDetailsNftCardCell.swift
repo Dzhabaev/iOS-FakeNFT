@@ -34,7 +34,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         button.setImage(
             UIImage(systemName: "heart.fill"),
             for: .normal)
-        button.tintColor = .white
         button.addTarget(self, action: #selector(likeTapped), for: .touchUpInside)
         return button
     }()
@@ -96,7 +95,19 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     // MARK: - Actions
     
     @objc private func likeTapped() {
-        // TODO: - Catalog Module 3: User Interaction
+        self.isItemLiked.toggle()
+        setLikeButtonState(isLiked: self.isItemLiked)
+        
+        let likesNetwork = LikesNetwork()
+        likesNetwork.getLikes { [weak self] likes in
+            guard let self = self, let likes = likes else { return }
+            
+            if self.isItemLiked {
+                self.addItemToLikes(likesNetwork, likes)
+            } else {
+                self.removeItemFromLikes(likesNetwork, likes)
+            }
+        }
     }
     
     @objc private func cartTapped() {
@@ -188,7 +199,8 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     }
     
     private func setLikeButtonState(isLiked: Bool) {
-        likeButton.tintColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
+        let color: UIColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
+        likeButton.tintColor = color
     }
     
     private func setCartButtonState(isAdded: Bool) {
@@ -212,7 +224,7 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             updatedNfts.remove(at: index)
         }
         cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
-            if let error = error {
+            if error != nil {
                 return
             }
             DispatchQueue.main.async {
@@ -226,12 +238,42 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         var updatedNfts = cart.nfts
         updatedNfts.append(self.itemId)
         cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
-            if let error = error {
+            if error != nil {
                 return
             }
             DispatchQueue.main.async {
                 self.setCartButtonState(isAdded: true)
                 self.isItemInCart = true
+            }
+        }
+    }
+    
+    private func addItemToLikes(_ likesNetwork: LikesNetwork, _ likes: Likes) {
+        var updatedLikes = likes.likes
+        updatedLikes.append(self.itemId)
+        likesNetwork.sendNewOrder(nftsIds: updatedLikes) { error in
+            if error != nil {
+                return
+            }
+            DispatchQueue.main.async {
+                self.setLikeButtonState(isLiked: true)
+                self.isItemLiked = true
+            }
+        }
+    }
+    
+    private func removeItemFromLikes(_ likesNetwork: LikesNetwork, _ likes: Likes) {
+        var updatedLikes = likes.likes
+        if let index = updatedLikes.firstIndex(of: self.itemId) {
+            updatedLikes.remove(at: index)
+        }
+        likesNetwork.sendNewOrder(nftsIds: updatedLikes) { error in
+            if error != nil {
+                return
+            }
+            DispatchQueue.main.async {
+                self.setLikeButtonState(isLiked: false)
+                self.isItemLiked = false
             }
         }
     }
