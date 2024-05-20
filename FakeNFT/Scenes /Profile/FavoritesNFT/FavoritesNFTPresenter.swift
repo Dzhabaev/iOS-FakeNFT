@@ -49,12 +49,7 @@ final class FavoritesNFTPresenter: FavoritesNFTPresenterProtocol {
                     view?.updateUI()
                 }
             case .failure(let error):
-                
                 view?.showAlertController(error)
-                
-//                view?.dismissProgressHUB()
-//                let alert = self.alertComponent.makeErrorAlert(with: error.localizedDescription)
-//                self.view?.showViewController(alert)
             }
         }
     }
