@@ -20,6 +20,7 @@ protocol ProfileViewControllerProtocol: AnyObject {
     func navigateToProfileEditScreen()
     func navigateToFavoritesNFTScreen()
     func navigateToMyNFTScreen()
+    func navigateToAboutScreen()
 }
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
@@ -112,7 +113,11 @@ extension ProfileViewController {
         let favoritesVC = FavoritesNFTConfigurator().configure(delegate: presenter)
         navigationController?.pushViewController(favoritesVC, animated: true)
     }
-
+    
+    func navigateToAboutScreen() {
+        let aboutVC = AboutViewController()
+        navigationController?.pushViewController(aboutVC, animated: true)
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource {
@@ -141,6 +146,10 @@ extension ProfileViewController: UITableViewDelegate {
         
         if profileItem.name.contains("Избранные NFT") {
             presenter?.favoritesNFTCellSelected()
+        }
+        
+        if profileItem.name.contains("О разработчике") {
+            presenter?.aboutCellSelected()
         }
     }
 }

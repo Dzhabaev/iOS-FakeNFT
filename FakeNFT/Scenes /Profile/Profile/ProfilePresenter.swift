@@ -16,6 +16,7 @@ protocol ProfilePresenterProtocol: AnyObject {
     func editBarButtonTapped()
     func myNFTCellSelected()
     func favoritesNFTCellSelected()
+    func aboutCellSelected()
 
     func fetchProfile()
     func getProfile() -> Profile?
@@ -72,6 +73,10 @@ extension ProfilePresenter {
     
     func favoritesNFTCellSelected() {
         view?.navigateToFavoritesNFTScreen()
+    }
+    
+    func aboutCellSelected() {
+        view?.navigateToAboutScreen()
     }
 }
 

@@ -9,7 +9,7 @@ import UIKit
 
 final class AlertComponent {
     
-    func makeErrorAlert(with message: String) -> UIAlertController {
+    func makeErrorAlert(_ message: String) -> UIAlertController {
         let errorAlert = UIAlertController(
             title: "Произошла ошибка!",
             message: message,

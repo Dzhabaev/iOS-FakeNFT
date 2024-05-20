@@ -17,11 +17,15 @@ protocol FavoritesNFTViewControllerProtocol {
     func showEmptyCart()
     func showProgressHUB()
     func dismissProgressHUB()
+    
+    func showAlertController(_ error: Error)
 }
 
 final class FavoritesNFTViewController: UIViewController, FavoritesNFTViewControllerProtocol {
 
     var presenter: FavoritesNFTPresenterProtocol?
+    
+    private var alertComponent = AlertComponent()
 
     private lazy var backButton = UIBarButtonItem(
         image: UIImage(named: "back"),
@@ -93,6 +97,12 @@ final class FavoritesNFTViewController: UIViewController, FavoritesNFTViewContro
     
     func showViewController(_ vc: UIViewController) {
         present(vc, animated: true)
+    }
+    
+    func showAlertController(_ error: Error) {
+        dismissProgressHUB()
+        let alert = alertComponent.makeErrorAlert(error.localizedDescription)
+        present(alert, animated: true)
     }
     
     func showEmptyCart() {

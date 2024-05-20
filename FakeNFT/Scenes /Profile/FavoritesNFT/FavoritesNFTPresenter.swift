@@ -24,8 +24,6 @@ final class FavoritesNFTPresenter: FavoritesNFTPresenterProtocol {
     var networkService: FavoritesServiceProtocol?
     weak var delegate: FavoritesDelegate?
     
-    private var alertComponent = AlertComponent()
-    
     private lazy var nftItems: [Item] = []
     
     func numberOfRowsInSection(_ section: Int) -> Int {
@@ -51,9 +49,12 @@ final class FavoritesNFTPresenter: FavoritesNFTPresenterProtocol {
                     view?.updateUI()
                 }
             case .failure(let error):
-                view?.dismissProgressHUB()
-                let alert = self.alertComponent.makeErrorAlert(with: error.localizedDescription)
-                self.view?.showViewController(alert)
+                
+                view?.showAlertController(error)
+                
+//                view?.dismissProgressHUB()
+//                let alert = self.alertComponent.makeErrorAlert(with: error.localizedDescription)
+//                self.view?.showViewController(alert)
             }
         }
     }
