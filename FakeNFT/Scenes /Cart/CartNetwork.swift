@@ -10,14 +10,12 @@ final class CartNetwork {
     func getCart(completion: @escaping (Cart?) -> Void) {
         networkClient.send(request: CartRequest(), type: Cart.self) { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .success(let cart):
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let cart):
                     completion(cart)
-                }
-            case .failure(let error):
-                print("Error fetching NFT collection: \(error)")
-                DispatchQueue.main.async {
+                case .failure(let error):
+                    print("Error fetching NFT collection: \(error)")
                     completion(nil)
                 }
             }

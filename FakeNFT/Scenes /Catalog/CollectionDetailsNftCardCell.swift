@@ -8,11 +8,16 @@
 import UIKit
 import Kingfisher
 
+protocol CollectionDetailsNftCardCellDelegate: AnyObject {
+    func collectionDetailsNftCardCell(_ cell: CollectionDetailsNftCardCell, didReceiveError errorModel: ErrorModel)
+}
+
 final class CollectionDetailsNftCardCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     
     static let reuseIdentifier = "CollectionDetailsNftCardCell"
+    weak var delegate: CollectionDetailsNftCardCellDelegate?
     
     // MARK: - Private Properties
     
@@ -224,7 +229,11 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             updatedNfts.remove(at: index)
         }
         cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
-            if error != nil {
+            if let error = error {
+                let errorModel = self.makeErrorModel(error, option: nil)
+                DispatchQueue.main.async {
+                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
+                }
                 return
             }
             DispatchQueue.main.async {
@@ -238,7 +247,11 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         var updatedNfts = cart.nfts
         updatedNfts.append(self.itemId)
         cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
-            if error != nil {
+            if let error = error {
+                let errorModel = self.makeErrorModel(error, option: nil)
+                DispatchQueue.main.async {
+                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
+                }
                 return
             }
             DispatchQueue.main.async {
@@ -252,7 +265,11 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         var updatedLikes = likes.likes
         updatedLikes.append(self.itemId)
         likesNetwork.sendNewOrder(nftsIds: updatedLikes) { error in
-            if error != nil {
+            if let error = error {
+                let errorModel = self.makeErrorModel(error, option: nil)
+                DispatchQueue.main.async {
+                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
+                }
                 return
             }
             DispatchQueue.main.async {
@@ -268,12 +285,36 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             updatedLikes.remove(at: index)
         }
         likesNetwork.sendNewOrder(nftsIds: updatedLikes) { error in
-            if error != nil {
+            if let error = error {
+                let errorModel = self.makeErrorModel(error, option: nil)
+                DispatchQueue.main.async {
+                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
+                }
                 return
             }
             DispatchQueue.main.async {
                 self.setLikeButtonState(isLiked: false)
                 self.isItemLiked = false
+            }
+        }
+    }
+}
+
+//MARK: - Error handling
+
+extension CollectionDetailsNftCardCell {
+    private func makeErrorModel(_ error: Error, option: (() -> Void)?) -> ErrorModel {
+        let message: String
+        switch error {
+        case is NetworkClientError:
+            message = "Произошла сетевая ошибка. Пожалуйста, попробуйте снова."
+        default:
+            message = "Произошла непредвиденная ошибка. Пожалуйста, попробуйте снова."
+        }
+        let actionText = "Повторить"
+        return ErrorModel(message: message, actionText: actionText) {
+            if let option = option {
+                option()
             }
         }
     }

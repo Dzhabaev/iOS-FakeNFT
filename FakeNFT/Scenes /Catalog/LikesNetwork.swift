@@ -17,13 +17,11 @@ final class LikesNetwork {
     func getLikes(completion: @escaping (Likes?) -> Void) {
         networkClient.send(request: LikesRequest(), type: Likes.self) { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .success(let likes):
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let likes):
                     completion(likes)
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
+                case .failure:
                     completion(nil)
                 }
             }

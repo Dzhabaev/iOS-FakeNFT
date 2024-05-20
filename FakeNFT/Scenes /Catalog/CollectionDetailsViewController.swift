@@ -294,6 +294,7 @@ extension CollectionDetailsViewController: UICollectionViewDataSource {
         }
         let nft = presenter.returnCollectionCell(for: indexPath.row)
         cell.configure(data: nft)
+        cell.delegate = self
         return cell
     }
 }
@@ -319,5 +320,13 @@ extension CollectionDetailsViewController: UIScrollViewDelegate {
         if scrollView.contentOffset.y < 0 {
             scrollView.contentOffset.y = 0
         }
+    }
+}
+
+// MARK: - CollectionDetailsNftCardCellDelegate
+
+extension CollectionDetailsViewController: CollectionDetailsNftCardCellDelegate {
+    func collectionDetailsNftCardCell(_ cell: CollectionDetailsNftCardCell, didReceiveError errorModel: ErrorModel) {
+        showError(errorModel)
     }
 }
