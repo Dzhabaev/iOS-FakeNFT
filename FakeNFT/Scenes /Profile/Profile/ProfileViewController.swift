@@ -14,9 +14,13 @@ protocol ProfileViewControllerProtocol: AnyObject {
 
     func showProfile(_ profile: Profile?)
     func showProfileItems(_ profileItems: [ProfileItem])
+    func showProgressHUB()
+    func dismissProgressHUB()
 
     func navigateToProfileEditScreen()
+    func navigateToFavoritesNFTScreen()
     func navigateToMyNFTScreen()
+    func navigateToAboutScreen()
 }
 
 final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
@@ -24,8 +28,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     var presenter: ProfilePresenterProtocol?
    
     private var profileView = ProfileView()
-    
-    private var profile: Profile?
+
     private var profileItems: [ProfileItem] = []
     
     private lazy var tableView: UITableView = {
@@ -74,8 +77,7 @@ extension ProfileViewController {
     func showProfile(_ profile: Profile?) {
         
         ProgressHUD.dismiss()
-        
-        self.profile = profile
+
         profileView.update(profile)
         tableView.reloadData()
     }
@@ -85,7 +87,18 @@ extension ProfileViewController {
         tableView.reloadData()
     }
     
+    func showProgressHUB() {
+        ProgressHUD.animationType = .circleRotateChase
+        ProgressHUD.colorAnimation = .black
+        ProgressHUD.show()
+    }
+    
+    func dismissProgressHUB() {
+        ProgressHUD.dismiss()
+    }
+    
     func navigateToProfileEditScreen() {
+        let profile = presenter?.getProfile()
         let profileEditVC = ProfileEditConfigurator().configure(profile)
         present(profileEditVC, animated: true)
     }
@@ -94,7 +107,17 @@ extension ProfileViewController {
         let myNftVC = MyNFTConfigurator().configure()
         navigationController?.pushViewController(myNftVC, animated: true)
     }
-
+    
+    func navigateToFavoritesNFTScreen() {
+        guard let presenter = presenter as? FavoritesDelegate else { return }
+        let favoritesVC = FavoritesNFTConfigurator().configure(delegate: presenter)
+        navigationController?.pushViewController(favoritesVC, animated: true)
+    }
+    
+    func navigateToAboutScreen() {
+        let aboutVC = AboutViewController()
+        navigationController?.pushViewController(aboutVC, animated: true)
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource {
@@ -120,6 +143,14 @@ extension ProfileViewController: UITableViewDelegate {
         if profileItem.name.contains("Мои NFT") {
             presenter?.myNFTCellSelected()
         }
+        
+        if profileItem.name.contains("Избранные NFT") {
+            presenter?.favoritesNFTCellSelected()
+        }
+        
+        if profileItem.name.contains("О разработчике") {
+            presenter?.aboutCellSelected()
+        }
     }
 }
 
@@ -141,9 +172,8 @@ extension ProfileViewController {
     }
     
     private func setupViews() {
-        ProgressHUD.animationType = .circleRotateChase
-        ProgressHUD.colorAnimation = .black
-        ProgressHUD.show()
+        
+        showProgressHUB()
         
         [
             profileView,

@@ -82,7 +82,8 @@ final class MyNFTViewController: UIViewController {
     
     @objc
     private func backButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
+        dismissProgressHUB()
     }
     
     @objc

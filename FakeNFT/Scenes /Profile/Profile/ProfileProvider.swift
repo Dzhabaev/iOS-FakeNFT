@@ -39,7 +39,13 @@ final class ProfileProvider: ProfileProviderProtocol {
     
     func updateProfile(_ profile: Profile?, completion: @escaping (Profile?) -> Void) {
         guard let profile else { return }
-        let profileData = "name=\(profile.name)&description=\(profile.description)&website=\(profile.website)&avatar=\(profile.avatar)"
+        
+        var encodedLikes = profile.likes.map { String($0) }.joined(separator: ",")
+        if encodedLikes.isEmpty {
+            encodedLikes = "null"
+        }
+
+        let profileData = "name=\(profile.name)&description=\(profile.description)&website=\(profile.website)&avatar=\(profile.avatar)&likes=\(encodedLikes)"
         let request = ProfileUpdateRequest(profileData)
         
         networkClient.send(request: request, type: Profile.self) { result in

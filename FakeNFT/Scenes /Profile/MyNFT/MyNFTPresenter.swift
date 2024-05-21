@@ -105,5 +105,4 @@ extension MyNFTPresenter: MyNFTPresenterProtocol {
         }
         view?.navigateToSortAlert(sortAlertController)
     }
-
 }
