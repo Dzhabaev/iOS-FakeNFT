@@ -201,3 +201,11 @@
 - экран «Корзина» — по названию;
 - экран «Мои NFT» — по рейтингу;
 - экран «Статистика» — по рейтингу.
+
+
+# Скринкасты
+## Статистика
+## Каталог
+## Профиль
+https://github.com/Georgii-N/YPTrueNFTMarketplace/assets/95555373/a1804f26-551d-4d85-8b29-9c6bbc1873e1](https://github.com/Dzhabaev/iOS-FakeNFT/blob/profile/Files/Profile-Demo.mp4
+## Корзина
