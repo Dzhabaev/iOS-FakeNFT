@@ -316,6 +316,8 @@ extension CollectionDetailsViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let nft = presenter.returnCollectionCell(for: indexPath.row)
+        let nftx = nfts[indexPath.row]
+        cell.nft = nftx
         cell.configure(data: nft)
         cell.delegate = self
         return cell
@@ -349,11 +351,27 @@ extension CollectionDetailsViewController: UIScrollViewDelegate {
 // MARK: - CollectionDetailsNftCardCellDelegate
 
 extension CollectionDetailsViewController: CollectionDetailsNftCardCellDelegate {
-    func likeButtonTapped(for itemId: String) {
-        presenter.likeButtonTapped(for: itemId)
+    func likeButtonTapped(cell: CollectionDetailsNftCardCell, for itemId: String) {
+        presenter.changeLike(nftID: itemId) { result in
+            switch result {
+            case .success(let isAdded):
+                cell.setLikeButtonState(isLiked: isAdded)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
-    func cartButtonTapped(for itemId: String) {
-        presenter.cartButtonTapped(for: itemId)
+    func cartButtonTapped(cell: CollectionDetailsNftCardCell ,for itemId: String) {
+        presenter.changeCart(nftID: itemId) { result in
+            switch result {
+            case .success(let isAdded):
+                cell.setCartButtonState(isAdded: isAdded)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }

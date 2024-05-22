@@ -52,6 +52,7 @@
 		72941B792BFDE0D800D7DFE5 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */; };
 		72C24F212BDAE859007FA876 /* CollectionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */; };
 		72C24F232BDAF74A007FA876 /* CatalogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */; };
+		72C43A242BFE8010008DA964 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C43A232BFE8010008DA964 /* UIBlockingProgressHUD.swift */; };
 		72C64DF02BD7BF3D001AA24B /* CatalogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */; };
 		72C64DF62BD84318001AA24B /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C64DF52BD84318001AA24B /* NetworkConstants.swift */; };
 		72C64DF82BD84BF8001AA24B /* CollectionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C64DF72BD84BF8001AA24B /* CollectionsRequest.swift */; };
@@ -130,6 +131,7 @@
 		72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsViewController.swift; sourceTree = "<group>"; };
 		72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenter.swift; sourceTree = "<group>"; };
+		72C43A232BFE8010008DA964 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogProvider.swift; sourceTree = "<group>"; };
 		72C64DF52BD84318001AA24B /* NetworkConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConstants.swift; sourceTree = "<group>"; };
 		72C64DF72BD84BF8001AA24B /* CollectionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsRequest.swift; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				3F6806D629CBC50A00B4F915 /* CellsReusingUtils.swift */,
 				3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */,
 				0CFCB74A2A780EA80009A829 /* UIView+Constraints.swift */,
+				72C43A232BFE8010008DA964 /* UIBlockingProgressHUD.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				72941B792BFDE0D800D7DFE5 /* ProfileModel.swift in Sources */,
+				72C43A242BFE8010008DA964 /* UIBlockingProgressHUD.swift in Sources */,
 				727F02B42BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift in Sources */,
 				72C64DF62BD84318001AA24B /* NetworkConstants.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,

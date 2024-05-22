@@ -9,20 +9,21 @@ import UIKit
 import Kingfisher
 
 protocol CollectionDetailsNftCardCellDelegate: AnyObject {
-    func likeButtonTapped(for itemId: String)
-    func cartButtonTapped(for itemId: String)
+    func likeButtonTapped(cell: CollectionDetailsNftCardCell ,for itemId: String)
+    func cartButtonTapped(cell: CollectionDetailsNftCardCell ,for itemId: String)
 }
 
 final class CollectionDetailsNftCardCell: UICollectionViewCell {
     
     // MARK: - Public Properties
-    
+    private let service = UserNFTService.shared
     static let reuseIdentifier = "CollectionDetailsNftCardCell"
     weak var delegate: CollectionDetailsNftCardCellDelegate?
     
     // MARK: - Private Properties
     
-    private var itemId: String = ""
+    var itemId: String = ""
+    var nft: Nft?
     private var isItemInCart: Bool = false
     private var isItemLiked: Bool = false
     
@@ -101,15 +102,15 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     // MARK: - Actions
     
     @objc private func likeTapped() {
-        delegate?.likeButtonTapped(for: itemId)
-        isItemLiked = !isItemLiked
-        setLikeButtonState(isLiked: isItemLiked)
+        guard let nft = self.nft else { return }
+        service.nft = nft
+        delegate?.likeButtonTapped(cell: self, for: nft.id)
     }
     
     @objc private func cartTapped() {
-        delegate?.cartButtonTapped(for: itemId)
-        isItemInCart = !isItemInCart
-        setCartButtonState(isAdded: isItemInCart)
+        guard let nft = self.nft else { return }
+        service.nft = nft
+        delegate?.cartButtonTapped(cell: self, for: nft.id)
     }
     
     // MARK: - Public Methods
