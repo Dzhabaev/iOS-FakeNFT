@@ -162,90 +162,67 @@ final class CollectionDetailsViewControllerPresenter {
 extension CollectionDetailsViewControllerPresenter: CollectionDetailsNftCardCellDelegate {
     
     func likeButtonTapped(for itemId: String) {
-        if let index = loadedNFTs.firstIndex(where: { $0.id == itemId }) {
-            let nft = loadedNFTs[index]
-            userNFTService.getProfile { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let profile):
-                    let newLikes = profile.likes
-                    if newLikes.contains(nft.id) {
-                        self.userNFTService.changeLike(newLikes: newLikes.filter { $0 != nft.id }, profile: profile) { result in
-                            switch result {
-                            case .success:
-                                self.idLikes.remove(nft.id)
-                                self.viewController?.reloadCollectionView()
-                            case .failure(let error):
-                                let errorModel = self.makeErrorModel(error, option: { self.likeButtonTapped(for: itemId) })
-                                DispatchQueue.main.async {
-                                    self.viewController?.showError(errorModel)
-                                }
-                            }
+        if idLikes.contains(itemId) {
+            idLikes.remove(itemId)
+        } else {
+            idLikes.insert(itemId)
+        }
+        userNFTService.getProfile { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let profile):
+                let newLikes = profile.likes
+                self.userNFTService.changeLike(newLikes: Array(newLikes), profile: profile) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success:
+                        DispatchQueue.main.async {
+                            self.viewController?.updateLikeButtonColor(isLiked: self.isLiked(itemId), for: itemId)
                         }
-                    } else {
-                        self.userNFTService.changeLike(newLikes: newLikes + [nft.id], profile: profile) { result in
-                            switch result {
-                            case .success:
-                                self.idLikes.insert(nft.id)
-                                self.viewController?.reloadCollectionView()
-                            case .failure(let error):
-                                let errorModel = self.makeErrorModel(error, option: { self.likeButtonTapped(for: itemId) })
-                                DispatchQueue.main.async {
-                                    self.viewController?.showError(errorModel)
-                                }
-                            }
+                    case .failure(let error):
+                        let errorModel = self.makeErrorModel(error, option: { self.likeButtonTapped(for: itemId) })
+                        DispatchQueue.main.async {
+                            self.viewController?.showError(errorModel)
                         }
                     }
-                case .failure(let error):
-                    let errorModel = self.makeErrorModel(error, option: { self.likeButtonTapped(for: itemId) })
-                    DispatchQueue.main.async {
-                        self.viewController?.showError(errorModel)
-                    }
+                }
+            case .failure(let error):
+                let errorModel = self.makeErrorModel(error, option: { self.likeButtonTapped(for: itemId) })
+                DispatchQueue.main.async {
+                    self.viewController?.showError(errorModel)
                 }
             }
         }
     }
     
     func cartButtonTapped(for itemId: String) {
-        if let index = loadedNFTs.firstIndex(where: { $0.id == itemId }) {
-            let nft = loadedNFTs[index]
-            userNFTService.getCart { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let cart):
-                    let newCart = cart.nfts
-                    if newCart.contains(nft.id) {
-                        self.userNFTService.changeCart(newCart: newCart.filter { $0 != nft.id }, cart: cart) { result in
-                            switch result {
-                            case .success:
-                                self.idAddedToCart.remove(nft.id)
-                                self.viewController?.reloadCollectionView()
-                            case .failure(let error):
-                                let errorModel = self.makeErrorModel(error, option: { self.cartButtonTapped(for: itemId) })
-                                DispatchQueue.main.async {
-                                    self.viewController?.showError(errorModel)
-                                }
-                            }
+        if idAddedToCart.contains(itemId) {
+            idAddedToCart.remove(itemId)
+        } else {
+            idAddedToCart.insert(itemId)
+        }
+        userNFTService.getCart { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let cart):
+                self.userNFTService.changeCart(newCart: Array(cart.nfts), cart: cart) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success:
+                        DispatchQueue.main.async {
+                            self.viewController?.updateCartButtonImage(isAddedToCart: self.isAddedToCart(itemId), for: itemId)
                         }
-                    } else {
-                        self.userNFTService.changeCart(newCart: newCart + [nft.id], cart: cart) { result in
-                            switch result {
-                            case .success:
-                                self.idAddedToCart.insert(nft.id)
-                                self.viewController?.reloadCollectionView()
-                            case .failure(let error):
-                                let errorModel = self.makeErrorModel(error, option: { self.cartButtonTapped(for: itemId) })
-                                DispatchQueue.main.async {
-                                    self.viewController?.showError(errorModel)
-                                }
-                            }
+                    case .failure(let error):
+                        let errorModel = self.makeErrorModel(error, option: { self.cartButtonTapped(for: itemId) })
+                        DispatchQueue.main.async {
+                            self.viewController?.showError(errorModel)
                         }
                     }
-                case .failure(let error):
-                    let errorModel = self.makeErrorModel(error, option: { self.cartButtonTapped(for: itemId) })
-                    DispatchQueue.main.async {
-                        self.viewController?.showError(errorModel)
-                    }
+                }
+            case .failure(let error):
+                let errorModel = self.makeErrorModel(error, option: { self.cartButtonTapped(for: itemId) })
+                DispatchQueue.main.async {
+                    self.viewController?.showError(errorModel)
                 }
             }
         }
