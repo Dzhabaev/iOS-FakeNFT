@@ -55,111 +55,20 @@ final class CollectionDetailsViewControllerPresenter {
     }
     
     func processNFTsLoading() {
-        for id in nftModel.nfts {
-            loadNftById(id: id)
-        }
+        UIBlockingProgressHUD.show()
+        nftModel.nfts.forEach { loadNftById(id: $0) }
     }
     
     func setOnLoadCompletion(_ completion: @escaping ([Nft]) -> Void) {
         onLoadCompletion = completion
     }
     
-    // MARK: - Private Methods
-    
-    private func loadNftById(id: String) {
-        nftService.loadNft(id: id) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let nft):
-                self.loadedNFTs.append(nft)
-                self.onLoadCompletion?(self.loadedNFTs)
-            case .failure(let error):
-                let errorModel = self.makeErrorModel(error, option: {self.loadNftById(id: id)})
-                self.viewController?.showError(errorModel)
-            }
-        }
-    }
-    
-    private func isLiked(_ idOfCell: String) -> Bool {
-        idLikes.contains(idOfCell)
-    }
-    
-    private func isAddedToCart(_ idOfCell: String) -> Bool {
-        idAddedToCart.contains(idOfCell)
-    }
-    
-    private func checkIfNftIsFavorite(_ nftId: String) {
-        guard !checkedNftIds.contains(nftId) else {
-            return
-        }
-        guard !fetchingNftLikes.contains(nftId) else {
-            return
-        }
-        fetchingNftLikes.insert(nftId)
-        userNFTService.getProfile { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.fetchingNftLikes.remove(nftId)
-            }
-            guard !self.checkedNftIds.contains(nftId) else {
-                return
-            }
-            self.checkedNftIds.insert(nftId)
-            switch result {
-            case .success(let profile):
-                let newLikes = profile.likes
-                let isFavorite = newLikes.contains(nftId)
-                DispatchQueue.main.async {
-                    self.viewController?.updateLikeButtonColor(isLiked: isFavorite, for: nftId)
-                }
-            case .failure(let error):
-                let errorModel = self.makeErrorModel(error, option: { self.checkIfNftIsFavorite(nftId) })
-                DispatchQueue.main.async {
-                    self.viewController?.showError(errorModel)
-                }
-            }
-        }
-    }
-    
-    private func checkIfNftIsAddedToCart(_ nftId: String) {
-        guard !checkedNft.contains(nftId) else {
-            return
-        }
-        guard !fetchingNftCart.contains(nftId) else {
-            return
-        }
-        fetchingNftCart.insert(nftId)
-        userNFTService.getCart { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.fetchingNftCart.remove(nftId)
-            }
-            guard !self.checkedNft.contains(nftId) else {
-                return
-            }
-            self.checkedNft.insert(nftId)
-            switch result {
-            case .success(let cart):
-                let newCart = cart.nfts
-                let isAddedToCart = newCart.contains(nftId)
-                DispatchQueue.main.async {
-                    if isAddedToCart {
-                        self.viewController?.updateCartButtonImage(isAddedToCart: true, for: nftId)
-                    }
-                }
-            case .failure(let error):
-                let errorModel = self.makeErrorModel(error, option: { self.checkIfNftIsAddedToCart(nftId) })
-                DispatchQueue.main.async {
-                    self.viewController?.showError(errorModel)
-                }
-            }
-        }
-    }
-    
     func changeLike(nftID: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         UIBlockingProgressHUD.show()
         
-        userNFTService.getProfile { result in
+        userNFTService.getProfile { [weak self] result in
+            guard let self = self else { return }
+            defer { UIBlockingProgressHUD.dismiss() }
             switch result {
             case .success(let model):
                 var likes = model.likes
@@ -174,23 +83,22 @@ final class CollectionDetailsViewControllerPresenter {
                 }
                 
                 self.userNFTService.changeLike(newLikes: likes, profile: model) { [weak self] result in
+                    guard let self = self else { return }
                     DispatchQueue.main.async {
-                        UIBlockingProgressHUD.dismiss()
                         switch result {
                         case .success:
                             NotificationCenter.default.post(name: NSNotification.Name("LikeUpdated"), object: nil, userInfo: ["nftID": nftID, "isAdded": isAdded])
                             completion(.success(isAdded))
                         case .failure(let error):
-                            let errorModel = self?.makeErrorModel(error, option: { self?.changeLike(nftID: nftID, completion: completion) })
-                            self?.viewController?.showError(errorModel!)
+                            let errorModel = self.makeErrorModel(error) { self.changeLike(nftID: nftID, completion: completion) }
+                            self.viewController?.showError(errorModel)
                             completion(.failure(error))
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    UIBlockingProgressHUD.dismiss()
-                    let errorModel = self.makeErrorModel(error, option: { self.changeLike(nftID: nftID, completion: completion) })
+                    let errorModel = self.makeErrorModel(error) { self.changeLike(nftID: nftID, completion: completion) }
                     self.viewController?.showError(errorModel)
                     completion(.failure(error))
                 }
@@ -200,12 +108,16 @@ final class CollectionDetailsViewControllerPresenter {
     
     func changeCart(nftID: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         UIBlockingProgressHUD.show()
-        userNFTService.getCart { result in
+        
+        userNFTService.getCart { [weak self] result in
+            guard let self = self else { return }
+            defer { UIBlockingProgressHUD.dismiss() }
             switch result {
             case .success(let model):
                 var cart = model.nfts
                 let id = nftID
                 var isAdded = false
+                
                 if cart.contains(id) {
                     cart.removeAll { $0 == id }
                     isAdded = false
@@ -213,25 +125,101 @@ final class CollectionDetailsViewControllerPresenter {
                     cart.append(id)
                     isAdded = true
                 }
+                
                 self.userNFTService.changeCart(newCart: cart, cart: model) { [weak self] result in
+                    guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
                         case .success:
                             NotificationCenter.default.post(name: NSNotification.Name("CartUpdated"), object: nil, userInfo: [:])
                             completion(.success(isAdded))
                         case .failure(let error):
-                            let errorModel = self?.makeErrorModel(error, option: { self?.changeCart(nftID: nftID, completion: completion) })
-                            self?.viewController?.showError(errorModel!)
+                            let errorModel = self.makeErrorModel(error) { self.changeCart(nftID: nftID, completion: completion) }
+                            self.viewController?.showError(errorModel)
                             completion(.failure(error))
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    UIBlockingProgressHUD.dismiss()
-                    let errorModel = self.makeErrorModel(error, option: { self.changeCart(nftID: nftID, completion: completion) })
+                    let errorModel = self.makeErrorModel(error) { self.changeCart(nftID: nftID, completion: completion) }
                     self.viewController?.showError(errorModel)
                     completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func loadNftById(id: String) {
+        UIBlockingProgressHUD.show()
+        nftService.loadNft(id: id) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let nft):
+                self.loadedNFTs.append(nft)
+                self.onLoadCompletion?(self.loadedNFTs)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                let errorModel = self.makeErrorModel(error) { self.loadNftById(id: id) }
+                self.viewController?.showError(errorModel)
+                UIBlockingProgressHUD.dismiss()
+            }
+        }
+    }
+    
+    private func isLiked(_ idOfCell: String) -> Bool {
+        idLikes.contains(idOfCell)
+    }
+    
+    private func isAddedToCart(_ idOfCell: String) -> Bool {
+        idAddedToCart.contains(idOfCell)
+    }
+    
+    private func checkIfNftIsFavorite(_ nftId: String) {
+        guard !checkedNftIds.contains(nftId), !fetchingNftLikes.contains(nftId) else { return }
+        fetchingNftLikes.insert(nftId)
+        userNFTService.getProfile { [weak self] result in
+            guard let self = self else { return }
+            defer { self.fetchingNftLikes.remove(nftId) }
+            guard !self.checkedNftIds.contains(nftId) else { return }
+            self.checkedNftIds.insert(nftId)
+            switch result {
+            case .success(let profile):
+                let isFavorite = profile.likes.contains(nftId)
+                DispatchQueue.main.async {
+                    self.viewController?.updateLikeButtonColor(isLiked: isFavorite, for: nftId)
+                }
+            case .failure(let error):
+                let errorModel = self.makeErrorModel(error) { self.checkIfNftIsFavorite(nftId) }
+                DispatchQueue.main.async {
+                    self.viewController?.showError(errorModel)
+                }
+            }
+        }
+    }
+    
+    private func checkIfNftIsAddedToCart(_ nftId: String) {
+        guard !checkedNft.contains(nftId), !fetchingNftCart.contains(nftId) else { return }
+        fetchingNftCart.insert(nftId)
+        userNFTService.getCart { [weak self] result in
+            guard let self = self else { return }
+            defer { self.fetchingNftCart.remove(nftId) }
+            guard !self.checkedNft.contains(nftId) else { return }
+            self.checkedNft.insert(nftId)
+            switch result {
+            case .success(let cart):
+                let isAddedToCart = cart.nfts.contains(nftId)
+                DispatchQueue.main.async {
+                    if isAddedToCart {
+                        self.viewController?.updateCartButtonImage(isAddedToCart: true, for: nftId)
+                    }
+                }
+            case .failure(let error):
+                let errorModel = self.makeErrorModel(error) { self.checkIfNftIsAddedToCart(nftId) }
+                DispatchQueue.main.async {
+                    self.viewController?.showError(errorModel)
                 }
             }
         }
@@ -249,9 +237,7 @@ final class CollectionDetailsViewControllerPresenter {
         }
         let actionText = "Повторить"
         return ErrorModel(message: message, actionText: actionText) {
-            if let option = option {
-                option()
-            }
+            option?()
         }
     }
 }
