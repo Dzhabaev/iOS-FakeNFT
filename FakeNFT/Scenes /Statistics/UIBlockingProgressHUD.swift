@@ -22,7 +22,6 @@ class UIBlockingProgressHUD {
 
     static func show() {
         isShowing = true
-        window?.isUserInteractionEnabled = false
         ProgressHUD.show()
     }
 

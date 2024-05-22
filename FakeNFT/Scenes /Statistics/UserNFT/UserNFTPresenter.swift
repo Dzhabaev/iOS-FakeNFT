@@ -34,14 +34,14 @@ final class UserNFTPresenter: UserNFTPresenterProtocol {
     func viewDidLoad() {
         getNFT()
         getCart()
-        getProfile()
     }
 
-    func getProfile() {
+    func getProfile(completion: @escaping () -> Void) {
         service.getProfile { result in
             switch result {
             case .success(let object):
                 self.profile = object
+                completion()
             case .failure(let error):
                 print(error)
             }
@@ -64,10 +64,12 @@ final class UserNFTPresenter: UserNFTPresenterProtocol {
         self.service.visibleNFT = []
         self.service.nftsIDs = self.nftsIDs
         service.getNFT {
-            self.visibleNFT = self.service.visibleNFT
-            self.view?.reload()
-            self.view?.updateEmptyView()
-            UIBlockingProgressHUD.dismiss()
+            self.getProfile {
+                self.visibleNFT = self.service.visibleNFT
+                self.view?.reload()
+                self.view?.updateEmptyView()
+                UIBlockingProgressHUD.dismiss()
+            }
         }
     }
 
@@ -91,7 +93,7 @@ final class UserNFTPresenter: UserNFTPresenterProtocol {
                     DispatchQueue.main.async {
                         switch result {
                         case .success:
-                            self?.getProfile()
+                            self?.getProfile() {}
                             completion(.success(isLiked))
                         case .failure(let error):
                             completion(.failure(error))

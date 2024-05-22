@@ -120,7 +120,7 @@ extension UserNFTCollectionView: UICollectionViewDataSource {
         if let cart = self.presenter.cart,
            let profile = self.presenter.profile {
             cell.set(nft: nft, cart: cart, profile: profile)
-        }
+        } 
 
         return cell
     }
