@@ -26,7 +26,7 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
         return window
     }
 
-    private let sortButton: UIButton = {
+    private lazy var sortButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "SortButton.png")?.withTintColor(.blackDayText)
@@ -135,7 +135,13 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
     }
 
     @objc func handleDataUpdate(_ notification: Notification) {
-        if let userInfo = notification.userInfo {
+        if notification.userInfo != nil {
+            presenter?.getAllCartData()
+        }
+    }
+    
+    @objc func handleDataClean(_ notification: Notification) {
+        if notification.userInfo != nil {
             presenter?.cleanCart()
         }
     }
@@ -161,6 +167,7 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
     }
 
     private func configureView() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDataClean(_:)), name: NSNotification.Name("CartClean"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleDataUpdate(_:)), name: NSNotification.Name("CartUpdated"), object: nil)
         navigationController?.setNavigationBarHidden(true, animated: true)
         refreshControl.addTarget(self, action: #selector(didPullToRefresh(_:)), for: .valueChanged)
@@ -218,15 +225,19 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
     func showEmptyMessage() {
         emptyLabel.isHidden = false
         priceView.isHidden = true
+        tableView.isHidden = true
     }
 
     func hideEmptyMessage() {
         emptyLabel.isHidden = true
         priceView.isHidden = false
+        tableView.isHidden = false
     }
 
     func updateTable() {
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 
     func startLoading() {
@@ -247,7 +258,7 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
         guard let count = presenter?.visibleNft.count else { return }
         guard let price = presenter?.priceCart else { return }
         valueNft.text = "\(count) NFT"
-        priceNfts.text = "\(price) ETH"
+        priceNfts.text = "\(NSString(format:"%.2f", price)) ETH"
     }
 }
 

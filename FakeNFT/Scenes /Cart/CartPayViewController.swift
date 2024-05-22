@@ -62,7 +62,7 @@ final class CartPayViewController: UIViewController & CartPayViewControllerProto
         return view
     }()
 
-    private let payButton: UIButton = {
+    private lazy var payButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(NSLocalizedString("Cart.payPage.payBttn", comment: ""), for: .normal)
@@ -83,7 +83,7 @@ final class CartPayViewController: UIViewController & CartPayViewControllerProto
         return label
     }()
 
-    private let linkButton: UIButton = {
+    private lazy var linkButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Пользовательского соглашения", for: .normal)
@@ -95,7 +95,7 @@ final class CartPayViewController: UIViewController & CartPayViewControllerProto
 
     @objc private func openWebView() {
         guard let url = URL(string: "https://yandex.ru/legal/practicum_termsofuse/") else { return }
-        let webViewVC = WebViewViewController()
+        let webViewVC = CartWebViewController()
         webViewVC.loadURL(url)
         present(webViewVC, animated: true)
     }
@@ -112,7 +112,7 @@ final class CartPayViewController: UIViewController & CartPayViewControllerProto
     }
 
     @objc func handleDataUpdate(_ notification: Notification) {
-        if let userInfo = notification.userInfo {
+        if notification.userInfo != nil {
             dismiss(animated: true)
         }
     }
@@ -195,7 +195,7 @@ final class CartPayViewController: UIViewController & CartPayViewControllerProto
     }
 
     private func configureView() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDataUpdate(_:)), name: NSNotification.Name("CartUpdated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDataUpdate(_:)), name: NSNotification.Name("CartClean"), object: nil)
         payButton.isEnabled = false
         view.backgroundColor = .backgroundColor
         navigationItem.titleView = navigationLabel
@@ -243,7 +243,7 @@ final class CartPayViewController: UIViewController & CartPayViewControllerProto
     }
 
     private func enableButton() {
-        if let selectedCurrency = selectedCurrency {
+        if selectedCurrency != nil {
             payButton.isEnabled = true
         }
     }
