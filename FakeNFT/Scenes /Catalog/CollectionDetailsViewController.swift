@@ -167,6 +167,13 @@ final class CollectionDetailsViewController: UIViewController, ErrorView {
         nftCollectionView.reloadData()
     }
     
+    func updateLikeButtonColor(isLiked: Bool, for itemId: String) {
+        guard let indexPath = indexPath(for: itemId) else { return }
+        if let cell = nftCollectionView.cellForItem(at: indexPath) as? CollectionDetailsNftCardCell {
+            cell.setLikeButtonState(isLiked: isLiked)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func setupViewDidLoad() {
@@ -279,6 +286,15 @@ final class CollectionDetailsViewController: UIViewController, ErrorView {
         descriptionCollectionLabel.text = catalog.description
         nftCollectionView.reloadData()
     }
+    
+    private func indexPath(for itemId: String) -> IndexPath? {
+        for (index, nft) in nfts.enumerated() {
+            if nft.id == itemId {
+                return IndexPath(row: index, section: 0)
+            }
+        }
+        return nil
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -326,7 +342,11 @@ extension CollectionDetailsViewController: UIScrollViewDelegate {
 // MARK: - CollectionDetailsNftCardCellDelegate
 
 extension CollectionDetailsViewController: CollectionDetailsNftCardCellDelegate {
-    func collectionDetailsNftCardCell(_ cell: CollectionDetailsNftCardCell, didReceiveError errorModel: ErrorModel) {
-        showError(errorModel)
+    func likeButtonTapped(for itemId: String) {
+        presenter.likeButtonTapped(for: itemId)
+    }
+    
+    func cartButtonTapped(for itemId: String) {
+        presenter.cartButtonTapped(for: itemId)
     }
 }

@@ -9,7 +9,8 @@ import UIKit
 import Kingfisher
 
 protocol CollectionDetailsNftCardCellDelegate: AnyObject {
-    func collectionDetailsNftCardCell(_ cell: CollectionDetailsNftCardCell, didReceiveError errorModel: ErrorModel)
+    func likeButtonTapped(for itemId: String)
+    func cartButtonTapped(for itemId: String)
 }
 
 final class CollectionDetailsNftCardCell: UICollectionViewCell {
@@ -100,34 +101,33 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     // MARK: - Actions
     
     @objc private func likeTapped() {
-        self.isItemLiked.toggle()
-        setLikeButtonState(isLiked: self.isItemLiked)
-        
-        let likesNetwork = LikesNetwork()
-        likesNetwork.getLikes { [weak self] likes in
-            guard let self = self, let likes = likes else { return }
-            
-            if self.isItemLiked {
-                self.addItemToLikes(likesNetwork, likes)
-            } else {
-                self.removeItemFromLikes(likesNetwork, likes)
-            }
-        }
+        delegate?.likeButtonTapped(for: itemId)
+        isItemLiked = !isItemLiked
+        setLikeButtonState(isLiked: isItemLiked)
     }
     
     @objc private func cartTapped() {
-        let cartNetwork = CartNetwork()
-        cartNetwork.getCart { [weak self] cart in
-            guard let self = self, let cart = cart else { return }
-            
-            let isItemInCart = cart.nfts.contains(self.itemId)
-            
-            if isItemInCart {
-                self.removeItemFromCart(cartNetwork, cart)
-            } else {
-                self.addItemToCart(cartNetwork, cart)
-            }
-        }
+        delegate?.cartButtonTapped(for: itemId)
+        isItemInCart = !isItemInCart
+        setCartButtonState(isAdded: isItemInCart)
+    }
+    
+    // MARK: - Public Methods
+    
+    func configure(data: CollectionCellModel) {
+        nftCardImageView.kf.setImage(with: data.image)
+        nameLabel.text = data.name
+        setRatingStars(data.rating)
+        let priceString = String(format: "%.2f", data.price)
+        priceLabel.text = priceString + " ETH"
+        itemId = data.id
+        setLikeButtonState(isLiked: data.isLiked)
+        setCartButtonState(isAdded: data.isAddedToCart)
+    }
+    
+    func setLikeButtonState(isLiked: Bool) {
+        let color: UIColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
+        likeButton.tintColor = color
     }
     
     // MARK: - Private Methods
@@ -192,22 +192,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         ])
     }
     
-    func configure(data: CollectionCellModel) {
-        nftCardImageView.kf.setImage(with: data.image)
-        nameLabel.text = data.name
-        setRatingStars(data.rating)
-        let priceString = String(format: "%.2f", data.price)
-        priceLabel.text = priceString + " ETH"
-        itemId = data.id
-        setLikeButtonState(isLiked: data.isLiked)
-        setCartButtonState(isAdded: data.isAddedToCart)
-    }
-    
-    private func setLikeButtonState(isLiked: Bool) {
-        let color: UIColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
-        likeButton.tintColor = color
-    }
-    
     private func setCartButtonState(isAdded: Bool) {
         let imageName = isAdded ? "cartDelete" : "cartAdd"
         cartButton.setImage(UIImage(named: imageName)?.withTintColor(.label), for: .normal)
@@ -220,102 +204,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         
         for (index, starImageView) in arrangedSubviews.enumerated() {
             starImageView.tintColor = index < rating ? UIColor(hexString: "FEEF0D") : .segmentInactive
-        }
-    }
-    
-    private func removeItemFromCart(_ cartNetwork: CartNetwork, _ cart: Cart) {
-        var updatedNfts = cart.nfts
-        if let index = updatedNfts.firstIndex(of: self.itemId) {
-            updatedNfts.remove(at: index)
-        }
-        cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
-            if let error = error {
-                let errorModel = self.makeErrorModel(error, option: nil)
-                DispatchQueue.main.async {
-                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.setCartButtonState(isAdded: false)
-                self.isItemInCart = false
-            }
-        }
-    }
-    
-    private func addItemToCart(_ cartNetwork: CartNetwork, _ cart: Cart) {
-        var updatedNfts = cart.nfts
-        updatedNfts.append(self.itemId)
-        cartNetwork.sendNewOrder(nftsIds: updatedNfts) { error in
-            if let error = error {
-                let errorModel = self.makeErrorModel(error, option: nil)
-                DispatchQueue.main.async {
-                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.setCartButtonState(isAdded: true)
-                self.isItemInCart = true
-            }
-        }
-    }
-    
-    private func addItemToLikes(_ likesNetwork: LikesNetwork, _ likes: Likes) {
-        var updatedLikes = likes.likes
-        updatedLikes.append(self.itemId)
-        likesNetwork.sendNewOrder(nftsIds: updatedLikes) { error in
-            if let error = error {
-                let errorModel = self.makeErrorModel(error, option: nil)
-                DispatchQueue.main.async {
-                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.setLikeButtonState(isLiked: true)
-                self.isItemLiked = true
-            }
-        }
-    }
-    
-    private func removeItemFromLikes(_ likesNetwork: LikesNetwork, _ likes: Likes) {
-        var updatedLikes = likes.likes
-        if let index = updatedLikes.firstIndex(of: self.itemId) {
-            updatedLikes.remove(at: index)
-        }
-        likesNetwork.sendNewOrder(nftsIds: updatedLikes) { error in
-            if let error = error {
-                let errorModel = self.makeErrorModel(error, option: nil)
-                DispatchQueue.main.async {
-                    self.delegate?.collectionDetailsNftCardCell(self, didReceiveError: errorModel)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.setLikeButtonState(isLiked: false)
-                self.isItemLiked = false
-            }
-        }
-    }
-}
-
-//MARK: - Error handling
-
-extension CollectionDetailsNftCardCell {
-    private func makeErrorModel(_ error: Error, option: (() -> Void)?) -> ErrorModel {
-        let message: String
-        switch error {
-        case is NetworkClientError:
-            message = "Произошла сетевая ошибка. Пожалуйста, попробуйте снова."
-        default:
-            message = "Произошла непредвиденная ошибка. Пожалуйста, попробуйте снова."
-        }
-        let actionText = "Повторить"
-        return ErrorModel(message: message, actionText: actionText) {
-            if let option = option {
-                option()
-            }
         }
     }
 }

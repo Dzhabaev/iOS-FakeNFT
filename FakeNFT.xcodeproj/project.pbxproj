@@ -51,6 +51,9 @@
 		72870D482BFA2EF500D19BE4 /* LikesNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72870D472BFA2EF500D19BE4 /* LikesNetwork.swift */; };
 		72870D4A2BFA38A800D19BE4 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72870D492BFA38A800D19BE4 /* Likes.swift */; };
 		72870D4C2BFA38FD00D19BE4 /* LikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72870D4B2BFA38FD00D19BE4 /* LikesRequest.swift */; };
+		72941B742BFDDF6700D7DFE5 /* UserNFTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72941B732BFDDF6700D7DFE5 /* UserNFTService.swift */; };
+		72941B772BFDDFAA00D7DFE5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 72941B762BFDDFAA00D7DFE5 /* Alamofire */; };
+		72941B792BFDE0D800D7DFE5 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */; };
 		72C24F212BDAE859007FA876 /* CollectionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */; };
 		72C24F232BDAF74A007FA876 /* CatalogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */; };
 		72C64DF02BD7BF3D001AA24B /* CatalogProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */; };
@@ -131,6 +134,8 @@
 		72870D472BFA2EF500D19BE4 /* LikesNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesNetwork.swift; sourceTree = "<group>"; };
 		72870D492BFA38A800D19BE4 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		72870D4B2BFA38FD00D19BE4 /* LikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesRequest.swift; sourceTree = "<group>"; };
+		72941B732BFDDF6700D7DFE5 /* UserNFTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserNFTService.swift; sourceTree = "<group>"; };
+		72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsViewController.swift; sourceTree = "<group>"; };
 		72C24F222BDAF74A007FA876 /* CatalogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenter.swift; sourceTree = "<group>"; };
 		72C64DEF2BD7BF3D001AA24B /* CatalogProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogProvider.swift; sourceTree = "<group>"; };
@@ -153,6 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72941B772BFDDFAA00D7DFE5 /* Alamofire in Frameworks */,
 				3F603CD029DB4A74000C43D7 /* Kingfisher in Frameworks */,
 				3F603CCD29DB4A53000C43D7 /* ProgressHUD in Frameworks */,
 			);
@@ -374,6 +380,7 @@
 				728594902BFA010100F23021 /* Cart.swift */,
 				0CFCB7412A78013E0009A829 /* Nft.swift */,
 				72870D492BFA38A800D19BE4 /* Likes.swift */,
+				72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -386,6 +393,14 @@
 				0C79EE622A76DD1900EE90EA /* RequestConstants.swift */,
 			);
 			path = Requests;
+			sourceTree = "<group>";
+		};
+		72941B722BFDDF3700D7DFE5 /* UserNFT */ = {
+			isa = PBXGroup;
+			children = (
+				72941B732BFDDF6700D7DFE5 /* UserNFTService.swift */,
+			);
+			path = UserNFT;
 			sourceTree = "<group>";
 		};
 		72F081A22BD2E2FD00058C94 /* Profile */ = {
@@ -409,6 +424,7 @@
 		72F081A42BD2E32D00058C94 /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
+				72941B722BFDDF3700D7DFE5 /* UserNFT */,
 				72F081A92BD2E38900058C94 /* StatisticsViewController.swift */,
 			);
 			path = Statistics;
@@ -461,6 +477,7 @@
 			packageProductDependencies = (
 				3F603CCC29DB4A53000C43D7 /* ProgressHUD */,
 				3F603CCF29DB4A74000C43D7 /* Kingfisher */,
+				72941B762BFDDFAA00D7DFE5 /* Alamofire */,
 			);
 			productName = FakeNFT;
 			productReference = 3F68069329CBBAF100B4F915 /* FakeNFT.app */;
@@ -538,6 +555,7 @@
 			packageReferences = (
 				3F603CCB29DB4A53000C43D7 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				3F603CCE29DB4A74000C43D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				72941B752BFDDFAA00D7DFE5 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 3F68069429CBBAF100B4F915 /* Products */;
 			projectDirPath = "";
@@ -616,6 +634,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				7285948B2BFA004000F23021 /* CartRequest.swift in Sources */,
+				72941B792BFDE0D800D7DFE5 /* ProfileModel.swift in Sources */,
 				727F02B42BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift in Sources */,
 				72C64DF62BD84318001AA24B /* NetworkConstants.swift in Sources */,
 				72870D482BFA2EF500D19BE4 /* LikesNetwork.swift in Sources */,
@@ -650,6 +669,7 @@
 				72C64DF02BD7BF3D001AA24B /* CatalogProvider.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
 				72F081A82BD2E37800058C94 /* CartViewController.swift in Sources */,
+				72941B742BFDDF6700D7DFE5 /* UserNFTService.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,
@@ -1007,6 +1027,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		72941B752BFDDFAA00D7DFE5 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1019,6 +1047,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F603CCE29DB4A74000C43D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		72941B762BFDDFAA00D7DFE5 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72941B752BFDDFAA00D7DFE5 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

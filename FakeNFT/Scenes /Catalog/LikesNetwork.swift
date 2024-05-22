@@ -20,8 +20,10 @@ final class LikesNetwork {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let likes):
+                    print("Успешно получены данные о лайках")
                     completion(likes)
-                case .failure:
+                case .failure(let error):
+                    print("Ошибка при получении данных о лайках: \(error)")
                     completion(nil)
                 }
             }
@@ -29,9 +31,8 @@ final class LikesNetwork {
     }
     
     func sendNewOrder(nftsIds: [String], completion: @escaping (Error?) -> Void) {
-        let nftsString = nftsIds.joined(separator: ",")
-        let bodyString = "nfts=\(nftsString)"
-        guard let bodyData = bodyString.data(using: .utf8) else { return }
+        let bodyDict: [String: Any] = ["nfts": nftsIds]
+        guard let bodyData = try? JSONSerialization.data(withJSONObject: bodyDict, options: []) else { return }
         
         guard let url = URL(string: "https://d5dn3j2ouj72b0ejucbl.apigw.yandexcloud.net/api/v1/profile/1") else { return }
         var request = URLRequest(url: url)
@@ -39,16 +40,30 @@ final class LikesNetwork {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue("9db803ac-6777-4dc6-9be2-d8eaa53129a9", forHTTPHeaderField: "X-Practicum-Mobile-Token")
-        if nftsIds.count != 0 {
-            request.httpBody = bodyData
-        }
+        request.httpBody = bodyData
         
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
+                print("Ошибка при отправке запроса: \(error)")
                 completion(error)
                 return
             }
-            completion(nil)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Статус код ответа сервера: \(httpResponse.statusCode)")
+                if (200...299).contains(httpResponse.statusCode) {
+                    print("Успешно отправлен новый запрос")
+                    completion(nil)
+                } else {
+                    print("Ошибка сервера: \(httpResponse.statusCode)")
+                    let serverError = NSError(domain: "Server Error", code: httpResponse.statusCode, userInfo: nil)
+                    completion(serverError)
+                }
+            }
+            if let data = data {
+                let responseString = String(data: data, encoding: .utf8)
+                print("Данные ответа: \(responseString ?? "Нет данных ответа")")
+            }
         }
         task.resume()
     }
