@@ -130,6 +130,11 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         likeButton.tintColor = color
     }
     
+    func setCartButtonState(isAdded: Bool) {
+        let imageName = isAdded ? "cartDelete" : "cartAdd"
+        cartButton.setImage(UIImage(named: imageName)?.withTintColor(.label), for: .normal)
+    }
+    
     // MARK: - Private Methods
     
     private func setupLayout() {
@@ -190,11 +195,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
             priceLabel.trailingAnchor.constraint(equalTo: cartButton.leadingAnchor)
         ])
-    }
-    
-    private func setCartButtonState(isAdded: Bool) {
-        let imageName = isAdded ? "cartDelete" : "cartAdd"
-        cartButton.setImage(UIImage(named: imageName)?.withTintColor(.label), for: .normal)
     }
     
     private func setRatingStars(_ rating: Int) {

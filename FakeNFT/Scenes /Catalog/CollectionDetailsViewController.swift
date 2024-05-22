@@ -174,6 +174,13 @@ final class CollectionDetailsViewController: UIViewController, ErrorView {
         }
     }
     
+    func updateCartButtonImage(isAddedToCart: Bool, for itemId: String) {
+        guard let indexPath = indexPath(for: itemId) else { return }
+        if let cell = nftCollectionView.cellForItem(at: indexPath) as? CollectionDetailsNftCardCell {
+            cell.setCartButtonState(isAdded: isAddedToCart)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func setupViewDidLoad() {

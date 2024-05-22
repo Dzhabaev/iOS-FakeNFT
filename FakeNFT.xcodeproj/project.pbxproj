@@ -48,9 +48,7 @@
 		728594852BFA004000F23021 /* CartNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728594792BFA004000F23021 /* CartNetwork.swift */; };
 		7285948B2BFA004000F23021 /* CartRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7285947F2BFA004000F23021 /* CartRequest.swift */; };
 		728594912BFA010100F23021 /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728594902BFA010100F23021 /* Cart.swift */; };
-		72870D482BFA2EF500D19BE4 /* LikesNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72870D472BFA2EF500D19BE4 /* LikesNetwork.swift */; };
 		72870D4A2BFA38A800D19BE4 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72870D492BFA38A800D19BE4 /* Likes.swift */; };
-		72870D4C2BFA38FD00D19BE4 /* LikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72870D4B2BFA38FD00D19BE4 /* LikesRequest.swift */; };
 		72941B742BFDDF6700D7DFE5 /* UserNFTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72941B732BFDDF6700D7DFE5 /* UserNFTService.swift */; };
 		72941B772BFDDFAA00D7DFE5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 72941B762BFDDFAA00D7DFE5 /* Alamofire */; };
 		72941B792BFDE0D800D7DFE5 /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */; };
@@ -131,9 +129,7 @@
 		728594792BFA004000F23021 /* CartNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartNetwork.swift; sourceTree = "<group>"; };
 		7285947F2BFA004000F23021 /* CartRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartRequest.swift; sourceTree = "<group>"; };
 		728594902BFA010100F23021 /* Cart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
-		72870D472BFA2EF500D19BE4 /* LikesNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesNetwork.swift; sourceTree = "<group>"; };
 		72870D492BFA38A800D19BE4 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
-		72870D4B2BFA38FD00D19BE4 /* LikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesRequest.swift; sourceTree = "<group>"; };
 		72941B732BFDDF6700D7DFE5 /* UserNFTService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserNFTService.swift; sourceTree = "<group>"; };
 		72941B782BFDE0D800D7DFE5 /* ProfileModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
 		72C24F202BDAE859007FA876 /* CollectionDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailsViewController.swift; sourceTree = "<group>"; };
@@ -234,8 +230,6 @@
 				72C64DF72BD84BF8001AA24B /* CollectionsRequest.swift */,
 				72D7DDE42BD6723900CCD735 /* CatalogModel.swift */,
 				0CFCB7482A7808900009A829 /* TestCatalogController.swift */,
-				72870D472BFA2EF500D19BE4 /* LikesNetwork.swift */,
-				72870D4B2BFA38FD00D19BE4 /* LikesRequest.swift */,
 			);
 			path = Catalog;
 			sourceTree = "<group>";
@@ -637,7 +631,6 @@
 				72941B792BFDE0D800D7DFE5 /* ProfileModel.swift in Sources */,
 				727F02B42BEBD15800E3C5E8 /* CollectionDetailsViewControllerPresenter.swift in Sources */,
 				72C64DF62BD84318001AA24B /* NetworkConstants.swift in Sources */,
-				72870D482BFA2EF500D19BE4 /* LikesNetwork.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* NftService.swift in Sources */,
 				72F081A62BD2E36200058C94 /* ProfileViewController.swift in Sources */,
@@ -654,7 +647,6 @@
 				727F02B82BED6E9300E3C5E8 /* CollectionCellModel.swift in Sources */,
 				72D7DDE52BD6723900CCD735 /* CatalogModel.swift in Sources */,
 				3FC8C39129D2453B0081F015 /* ExampleRequest.swift in Sources */,
-				72870D4C2BFA38FD00D19BE4 /* LikesRequest.swift in Sources */,
 				7210C6CB2BF7589C002BBAB9 /* WebViewController.swift in Sources */,
 				0CFCB7462A78064B0009A829 /* NftDetailCellModel.swift in Sources */,
 				0CFCB74B2A780EA80009A829 /* UIView+Constraints.swift in Sources */,
