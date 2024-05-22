@@ -225,15 +225,19 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
     func showEmptyMessage() {
         emptyLabel.isHidden = false
         priceView.isHidden = true
+        tableView.isHidden = true
     }
 
     func hideEmptyMessage() {
         emptyLabel.isHidden = true
         priceView.isHidden = false
+        tableView.isHidden = false
     }
 
     func updateTable() {
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 
     func startLoading() {
