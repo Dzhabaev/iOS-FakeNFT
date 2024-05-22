@@ -93,7 +93,7 @@
 		75B3A66B2BEE8556009CD57E /* ProfileConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B3A66A2BEE8556009CD57E /* ProfileConfigurator.swift */; };
 		75B3A66D2BEE8903009CD57E /* ProfileEditPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B3A66C2BEE8903009CD57E /* ProfileEditPresenter.swift */; };
 		75B3A66F2BEE8910009CD57E /* ProfileEditConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B3A66E2BEE8910009CD57E /* ProfileEditConfigurator.swift */; };
-		75BA5F6B2BFE50BC00EAFD5B /* CartConfirmPayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BA5F6A2BFE50BC00EAFD5B /* CartConfirmPayView.swift */; };
+		75BA5F712BFE530900EAFD5B /* CartConfirmPayForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BA5F702BFE530900EAFD5B /* CartConfirmPayForm.swift */; };
 		75BE2D882BF516CA00759C17 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BE2D872BF516CA00759C17 /* Order.swift */; };
 		75D67F8F2BFCF864003810D1 /* CartPayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D67F8E2BFCF864003810D1 /* CartPayViewController.swift */; };
 		75D67F932BFCF8E7003810D1 /* CartDeleteConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D67F922BFCF8E7003810D1 /* CartDeleteConfirmView.swift */; };
@@ -227,7 +227,7 @@
 		75B3A66A2BEE8556009CD57E /* ProfileConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurator.swift; sourceTree = "<group>"; };
 		75B3A66C2BEE8903009CD57E /* ProfileEditPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditPresenter.swift; sourceTree = "<group>"; };
 		75B3A66E2BEE8910009CD57E /* ProfileEditConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditConfigurator.swift; sourceTree = "<group>"; };
-		75BA5F6A2BFE50BC00EAFD5B /* CartConfirmPayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CartConfirmPayView.swift; path = ../../../../Data/CartConfirmPayView.swift; sourceTree = "<group>"; };
+		75BA5F702BFE530900EAFD5B /* CartConfirmPayForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartConfirmPayForm.swift; sourceTree = "<group>"; };
 		75BE2D872BF516CA00759C17 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		75D67F8E2BFCF864003810D1 /* CartPayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartPayViewController.swift; sourceTree = "<group>"; };
 		75D67F922BFCF8E7003810D1 /* CartDeleteConfirmView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartDeleteConfirmView.swift; sourceTree = "<group>"; };
@@ -513,9 +513,9 @@
 				205191262BE367A400074EBF /* CartRequest.swift */,
 				2051912A2BE3764000074EBF /* CartPayPresenter.swift */,
 				75D67F8E2BFCF864003810D1 /* CartPayViewController.swift */,
-				75BA5F6A2BFE50BC00EAFD5B /* CartConfirmPayView.swift */,
 				209555C82BE51E26008B3BBD /* CartGetNftsRequest.swift */,
 				202F41B82BF0EE08009BCB85 /* CartNetwork.swift */,
+				75BA5F702BFE530900EAFD5B /* CartConfirmPayForm.swift */,
 			);
 			path = Cart;
 			sourceTree = "<group>";
@@ -971,7 +971,6 @@
 				84CFE5452BE3A3BA0052D5AE /* NFTTableViewCell.swift in Sources */,
 				84CFE5462BE3A3BA0052D5AE /* UserInfoPresenter.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
-				75BA5F6B2BFE50BC00EAFD5B /* CartConfirmPayView.swift in Sources */,
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
 				72F081AC2BD2F3C500058C94 /* CatalogViewController.swift in Sources */,
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,
@@ -1023,6 +1022,7 @@
 				755353CC2BFA323500F1226F /* FavoritesService.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,
+				75BA5F712BFE530900EAFD5B /* CartConfirmPayForm.swift in Sources */,
 				75B3A6692BEE8548009CD57E /* ProfilePresenter.swift in Sources */,
 				84CFE5472BE3A3BA0052D5AE /* UserInfoView.swift in Sources */,
 				84CFE5482BE3A3BA0052D5AE /* RatingStarsView.swift in Sources */,
