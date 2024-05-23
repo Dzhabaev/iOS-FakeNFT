@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-final class WebViewController: UIViewController {
+final class StatisticWebViewController: UIViewController {
 
     private var url: String
 
@@ -67,7 +67,7 @@ final class WebViewController: UIViewController {
 
 }
 
-extension WebViewController: WKNavigationDelegate {
+extension StatisticWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         progressView.isHidden = false
         progressView.setProgress(0.1, animated: true)

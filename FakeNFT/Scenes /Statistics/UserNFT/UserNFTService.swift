@@ -14,8 +14,8 @@ final class UserNFTService {
     private init() {}
 
     var nftsIDs: [String] = []
-    var visibleNFT: [NFTModel] = []
-    var nft: NFTModel?
+    var visibleNFT: [Nft] = []
+    var nft: Nft?
 
     func getNFT(complition: @escaping () -> Void ) {
         let headers: HTTPHeaders = [
@@ -31,7 +31,7 @@ final class UserNFTService {
 
         for request in requests {
             group.enter()
-            request.responseDecodable(of: NFTModel.self) { response in
+            request.responseDecodable(of: Nft.self) { response in
                 defer {
                     group.leave()
                 }
@@ -82,7 +82,7 @@ final class UserNFTService {
             }
     }
 
-    func changeCart(newCart: [String], cart: OrderModel, completion: @escaping (Result<Void, Error>) -> Void) {
+    func changeCart(newCart: [String], cart: Cart, completion: @escaping (Result<Void, Error>) -> Void) {
 
         guard let nft = self.nft else { return }
         let cartString = newCart.joined(separator: ",")
@@ -137,7 +137,7 @@ final class UserNFTService {
         }
     }
 
-    func getCart(completion: @escaping (Result<OrderModel, Error>) -> Void) {
+    func getCart(completion: @escaping (Result<Cart, Error>) -> Void) {
         let headers: HTTPHeaders = [
             NetworkConstants.acceptKey: NetworkConstants.acceptValue,
             NetworkConstants.tokenKey: NetworkConstants.tokenValue
@@ -145,7 +145,7 @@ final class UserNFTService {
 
         let url = "https://d5dn3j2ouj72b0ejucbl.apigw.yandexcloud.net/api/v1/orders/1"
 
-        AF.request(url, headers: headers).responseDecodable(of: OrderModel.self) { response in
+        AF.request(url, headers: headers).responseDecodable(of: Cart.self) { response in
             switch response.result {
             case .success(let object):
                 completion(.success(object))

@@ -159,7 +159,7 @@ extension UserNFTCollectionView: UINavigationControllerDelegate {
 
 extension UserNFTCollectionView: UserNFTCellDelegate {
 
-    func addToCartButtonClicked(_ cell: UserNFTCollectionCell, nft: NFTModel) {
+    func addToCartButtonClicked(_ cell: UserNFTCollectionCell, nft: Nft) {
         presenter.changeCart(nft: nft) { result in
             switch result {
             case .success(let isAdded):
@@ -171,7 +171,7 @@ extension UserNFTCollectionView: UserNFTCellDelegate {
         }
     }
 
-    func addFavouriteButtonClicked(_ cell: UserNFTCollectionCell, nft: NFTModel) {
+    func addFavouriteButtonClicked(_ cell: UserNFTCollectionCell, nft: Nft) {
         presenter.changeLike(nft: nft) { result in
             switch result {
             case .success(let isLiked):
