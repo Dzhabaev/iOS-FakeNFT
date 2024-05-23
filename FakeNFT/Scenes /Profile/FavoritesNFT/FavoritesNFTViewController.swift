@@ -28,7 +28,7 @@ final class FavoritesNFTViewController: UIViewController, FavoritesNFTViewContro
     private var alertComponent = AlertComponent()
 
     private lazy var backButton = UIBarButtonItem(
-        image: UIImage(named: "back"),
+        image: UIImage(named: "BackBttnCart"),
         style: .plain,
         target: self,
         action: #selector(didTapBackButton)

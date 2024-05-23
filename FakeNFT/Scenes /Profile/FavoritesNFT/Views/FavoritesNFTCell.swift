@@ -58,7 +58,7 @@ final class FavoritesCell: UICollectionViewCell, ReuseIdentifying {
     
     private lazy var favoriteButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "like-on"), for: .normal)
+        button.setImage(UIImage(named: "favoutiteImage")?.withTintColor(UIColor.yaRedUniversal), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(didTapFavoriteButton), for: .touchUpInside)
         return button

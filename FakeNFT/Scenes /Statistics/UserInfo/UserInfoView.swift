@@ -132,7 +132,7 @@ final class UserInfoView: UIViewController & UserInfoViewControllerProtocol {
     }
 
     @objc private func webButtonTapped() {
-        navigationController?.pushViewController(AuthorWebViewController(urlString: presenter.object?.website ?? ""), animated: true)
+        navigationController?.pushViewController(StatisticWebViewController(url: presenter.object?.website ?? ""), animated: true)
     }
 }
 

@@ -23,7 +23,7 @@ final class MyNFTViewController: UIViewController {
     var presenter: MyNFTPresenterProtocol?
     
     private lazy var backButton = UIBarButtonItem(
-        image: UIImage(named: "back"),
+        image: UIImage(named: "BackBttnCart"),
         style: .plain,
         target: self,
         action: #selector(backButtonTapped)

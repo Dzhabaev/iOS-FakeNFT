@@ -43,15 +43,13 @@ extension UIColor {
     static let textOnSecondary = UIColor.black
     static let hyperlinkText = UIColor(hexString: "0A84FF")
     
-    static let yaFavourite = UIColor(hexString: "#F56B6C")
-    
     private static let yaBlackLight = UIColor(hexString: "1A1B22")
     private static let yaBlackDark = UIColor.white
     static let yaLightGrayLight = UIColor(hexString: "#F7F7F8")
     private static let yaLightGrayDark = UIColor(hexString: "#2C2C2E")
     
     private static let yaGreenUniversal = UIColor(hexString: "#1C9F00")
-    private static let yaRedUniversal = UIColor(hexString: "#F56B6C")
+    static let yaRedUniversal = UIColor(hexString: "#F56B6C")
     private static let yaWhiteDay = UIColor(hexString: "#FFFFFF")
     private static let yaWhiteNight = UIColor(hexString: "#1A1B22")
     private static let yaBlackUniversal = UIColor(hexString: "#1A1B22")

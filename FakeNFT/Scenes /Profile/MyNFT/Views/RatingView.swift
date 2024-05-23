@@ -9,8 +9,8 @@ import UIKit
 
 final class RatingView: UIStackView {
     
-    private let fillStarImage: UIImage? = UIImage(named: "star-on")
-    private let emptyStarImage: UIImage? = UIImage(named: "star-off")
+    private let fillStarImage: UIImage? = UIImage(named: "starFilled")
+    private let emptyStarImage: UIImage? = UIImage(named: "starEmpty")
     
     init(rating: Int = 5) {
         super.init(frame: .zero)

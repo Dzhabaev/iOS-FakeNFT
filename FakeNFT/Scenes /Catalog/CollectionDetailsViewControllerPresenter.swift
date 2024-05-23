@@ -57,7 +57,7 @@ final class CollectionDetailsViewControllerPresenter {
     
     func processNFTsLoading() {
         UIBlockingProgressHUD.show()
-//        nftModel.nfts.forEach { loadNftById(id: $0) }
+        nftModel.nfts.forEach { loadNftById(id: $0) }
     }
     
     func setOnLoadCompletion(_ completion: @escaping ([Nft]) -> Void) {
@@ -164,32 +164,22 @@ final class CollectionDetailsViewControllerPresenter {
         completion(.success(isAdded))
     }
     
-//    private func loadNftById(id: String) {
-//        UIBlockingProgressHUD.show()
-//        nftService.loadNft(id: id) { [weak self] result in
-//            guard let self = self else { return }
-//            switch result {
-//            case .success(let nft):
-//                let nftModel = NFTModel(
-//                    createdAt: nft.createdAt,
-//                    name: nft.name,
-//                    images: nft.images.map { $0.absoluteString },
-//                    rating: nft.rating,
-//                    description: nft.description,
-//                    price: nft.price,
-//                    author: nft.author,
-//                    id: nft.id
-//                )
-//                self.loadedNFTs.append(nftModel)
-//                self.onLoadCompletion?(self.loadedNFTs)
-//                UIBlockingProgressHUD.dismiss()
-//            case .failure(let error):
-//                let errorModel = self.makeErrorModel(error) { self.loadNftById(id: id) }
-//                self.viewController?.showError(errorModel)
-//                UIBlockingProgressHUD.dismiss()
-//            }
-//        }
-//    }
+    private func loadNftById(id: String) {
+        UIBlockingProgressHUD.show()
+        nftService.loadNft(id: id) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let nft):
+                self.loadedNFTs.append(nft)
+                self.onLoadCompletion?(self.loadedNFTs)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                let errorModel = self.makeErrorModel(error) { self.loadNftById(id: id) }
+                self.viewController?.showError(errorModel)
+                UIBlockingProgressHUD.dismiss()
+            }
+        }
+    }
     
     private func isLiked(_ idOfCell: String) -> Bool {
         idLikes.contains(idOfCell)
