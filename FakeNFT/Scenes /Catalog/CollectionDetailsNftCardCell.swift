@@ -8,15 +8,22 @@
 import UIKit
 import Kingfisher
 
+protocol CollectionDetailsNftCardCellDelegate: AnyObject {
+    func likeButtonTapped(cell: CollectionDetailsNftCardCell ,for itemId: String)
+    func cartButtonTapped(cell: CollectionDetailsNftCardCell ,for itemId: String)
+}
+
 final class CollectionDetailsNftCardCell: UICollectionViewCell {
     
     // MARK: - Public Properties
-    
+    private let service = UserNFTService.shared
     static let reuseIdentifier = "CollectionDetailsNftCardCell"
+    weak var delegate: CollectionDetailsNftCardCellDelegate?
     
     // MARK: - Private Properties
     
-    private var itemId: String = ""
+    var itemId: String = ""
+    var nft: Nft?
     private var isItemInCart: Bool = false
     private var isItemLiked: Bool = false
     
@@ -34,7 +41,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         button.setImage(
             UIImage(systemName: "heart.fill"),
             for: .normal)
-        button.tintColor = .white
         button.addTarget(self, action: #selector(likeTapped), for: .touchUpInside)
         return button
     }()
@@ -96,11 +102,38 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     // MARK: - Actions
     
     @objc private func likeTapped() {
-        // TODO: - Catalog Module 3: User Interaction
+        guard let nft = self.nft else { return }
+        service.nft = nft
+        delegate?.likeButtonTapped(cell: self, for: nft.id)
     }
     
     @objc private func cartTapped() {
-        // TODO: - Catalog Module 3: User Interaction
+        guard let nft = self.nft else { return }
+        service.nft = nft
+        delegate?.cartButtonTapped(cell: self, for: nft.id)
+    }
+    
+    // MARK: - Public Methods
+    
+    func configure(data: CollectionCellModel) {
+        nftCardImageView.kf.setImage(with: data.image)
+        nameLabel.text = data.name
+        setRatingStars(data.rating)
+        let priceString = String(format: "%.2f", data.price)
+        priceLabel.text = priceString + " ETH"
+        itemId = data.id
+        setLikeButtonState(isLiked: data.isLiked)
+        setCartButtonState(isAdded: data.isAddedToCart)
+    }
+    
+    func setLikeButtonState(isLiked: Bool) {
+        let color: UIColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
+        likeButton.tintColor = color
+    }
+    
+    func setCartButtonState(isAdded: Bool) {
+        let imageName = isAdded ? "cartDelete" : "cartAdd"
+        cartButton.setImage(UIImage(named: imageName)?.withTintColor(.label), for: .normal)
     }
     
     // MARK: - Private Methods
@@ -163,26 +196,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
             priceLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
             priceLabel.trailingAnchor.constraint(equalTo: cartButton.leadingAnchor)
         ])
-    }
-    
-    func configure(data: CollectionCellModel) {
-        nftCardImageView.kf.setImage(with: data.image)
-        nameLabel.text = data.name
-        setRatingStars(data.rating)
-        let priceString = String(format: "%.2f", data.price)
-        priceLabel.text = priceString + " ETH"
-        itemId = data.id
-        setLikeButtonState(isLiked: data.isLiked)
-        setCartButtonState(isAdded: data.isAddedToCart)
-    }
-    
-    private func setLikeButtonState(isLiked: Bool) {
-        likeButton.tintColor = isLiked ? UIColor(hexString: "F56B6C") : UIColor.white
-    }
-    
-    private func setCartButtonState(isAdded: Bool) {
-        let imageName = isAdded ? "cartDelete" : "cartAdd"
-        cartButton.setImage(UIImage(named: imageName)?.withTintColor(.label), for: .normal)
     }
     
     private func setRatingStars(_ rating: Int) {

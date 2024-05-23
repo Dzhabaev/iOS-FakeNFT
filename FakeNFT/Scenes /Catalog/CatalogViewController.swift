@@ -166,7 +166,8 @@ extension CatalogViewController: UITableViewDelegate {
         let collectionDetailsVC = CollectionDetailsViewController(
             presenter: CollectionDetailsViewControllerPresenter(
                 nftModel: catalogItems[indexPath.row],
-                nftService: nftService
+                nftService: nftService,
+                userNFTService: UserNFTService.shared
             )
         )
         collectionDetailsVC.collection = catalogItems[indexPath.row]
