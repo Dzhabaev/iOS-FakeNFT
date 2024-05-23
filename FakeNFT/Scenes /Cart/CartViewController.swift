@@ -212,7 +212,7 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
 
             payButton.leadingAnchor.constraint(equalTo: priceStack.trailingAnchor, constant: 24),
             payButton.topAnchor.constraint(equalTo: priceView.topAnchor, constant: 16),
-            payButton.bottomAnchor.constraint(equalTo: payButton.bottomAnchor, constant: -16),
+            payButton.bottomAnchor.constraint(equalTo: priceView.bottomAnchor, constant: -16),
             payButton.trailingAnchor.constraint(equalTo: priceView.trailingAnchor, constant: -16),
             payButton.widthAnchor.constraint(equalToConstant: 240),
             payButton.heightAnchor.constraint(equalToConstant: 44),
