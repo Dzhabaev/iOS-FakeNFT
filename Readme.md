@@ -209,3 +209,5 @@
 ## Профиль
 https://github.com/Dzhabaev/iOS-FakeNFT/blob/profile/Files/Profile-Demo.mp4
 ## Корзина
+https://github.com/Dzhabaev/iOS-FakeNFT/assets/104221263/af09f5df-68b9-4e3d-b531-c5f5875b1dc2
+
