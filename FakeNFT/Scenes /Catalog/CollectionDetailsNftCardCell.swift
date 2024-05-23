@@ -23,7 +23,7 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     // MARK: - Private Properties
     
     var itemId: String = ""
-    var nft: Nft?
+    var nft: NFTModel?
     private var isItemInCart: Bool = false
     private var isItemLiked: Bool = false
     

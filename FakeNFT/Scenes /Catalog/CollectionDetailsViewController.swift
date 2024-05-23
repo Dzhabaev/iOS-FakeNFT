@@ -24,7 +24,7 @@ final class CollectionDetailsViewController: UIViewController, ErrorView {
     // MARK: - Private Properties
     
     private let presenter: CollectionDetailsViewControllerPresenter
-    private var nfts: [Nft] = []
+    private var nfts: [NFTModel] = []
     private var nftCollectionViewHeightConstraint: NSLayoutConstraint?
     
     private lazy var scrollView: UIScrollView = {
@@ -156,7 +156,7 @@ final class CollectionDetailsViewController: UIViewController, ErrorView {
     }
     
     @objc private func authorLinkTapped() {
-        let webViewController = WebViewController(urlString: presenter.authorURLString)
+        let webViewController = AuthorWebViewController(urlString: presenter.authorURLString)
         webViewController.modalPresentationStyle = .fullScreen
         present(webViewController, animated: true, completion: nil)
     }

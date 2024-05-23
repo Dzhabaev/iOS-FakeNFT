@@ -116,13 +116,13 @@ struct DefaultNetworkClient: NetworkClient {
         }
         
         var urlRequest = URLRequest(url: endpoint)
+        urlRequest.timeoutInterval = 10
         urlRequest.httpMethod = request.httpMethod.rawValue
         
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
+        if let httpBody = request.httpBody {
             urlRequest.setValue(NetworkConstants.acceptValue, forHTTPHeaderField: NetworkConstants.acceptKey)
             urlRequest.setValue(NetworkConstants.contentTypeValue, forHTTPHeaderField: NetworkConstants.contentTypeKey)
-            urlRequest.httpBody = dtoEncoded
+            urlRequest.httpBody = httpBody.data(using: .utf8)
         }
         
         urlRequest.setValue(NetworkConstants.tokenValue, forHTTPHeaderField: NetworkConstants.tokenKey)

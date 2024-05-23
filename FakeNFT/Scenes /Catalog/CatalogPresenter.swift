@@ -7,9 +7,9 @@
 
 import Foundation
 
-// MARK: - SortType
+// MARK: - SortTypeCatalog
 
-enum SortType {
+enum SortTypeCatalog {
     case none
     case byName
     case byQuantity
@@ -23,7 +23,7 @@ final class CatalogPresenter {
     
     private let catalogProvider: CatalogProvider = CatalogProviderImpl(networkClient: DefaultNetworkClient())
     private var catalogItems: [CatalogModel] = []
-    private var sortType: SortType = .none
+    private var sortType: SortTypeCatalog = .none
     
     // MARK: - Public Methods
     
@@ -35,7 +35,7 @@ final class CatalogPresenter {
         }
     }
     
-    func sortCatalog(by sortType: SortType) -> [CatalogModel] {
+    func sortCatalog(by sortType: SortTypeCatalog) -> [CatalogModel] {
         switch sortType {
         case .none:
             return catalogItems

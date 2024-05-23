@@ -15,7 +15,7 @@ final class CatalogViewController: UIViewController {
     
     private let presenter = CatalogPresenter()
     private var catalogItems: [CatalogModel] = []
-    private var sortType: SortType = .none
+    private var sortType: SortTypeCatalog = .none
     
     private lazy var filterButton: UIButton = {
         let button = UIButton()

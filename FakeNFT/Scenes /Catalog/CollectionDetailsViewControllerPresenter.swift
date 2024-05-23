@@ -18,12 +18,12 @@ final class CollectionDetailsViewControllerPresenter {
     
     // MARK: - Private Properties
     
-    private var onLoadCompletion: (([Nft]) -> Void)?
+    private var onLoadCompletion: (([NFTModel]) -> Void)?
     private var idLikes: Set<String> = []
     private var idAddedToCart: Set<String> = []
     private let nftModel: CatalogModel
     private let nftService: NftService
-    private var loadedNFTs: [Nft] = []
+    private var loadedNFTs: [NFTModel] = []
     private let userNFTService: UserNFTService
     private var checkedNftIds: Set<String> = []
     private var fetchingNftLikes: Set<String> = []
@@ -44,13 +44,14 @@ final class CollectionDetailsViewControllerPresenter {
         let nftForIndex = loadedNFTs[index]
         checkIfNftIsFavorite(nftForIndex.id)
         checkIfNftIsAddedToCart(nftForIndex.id)
-        return CollectionCellModel(image: nftForIndex.images[0],
-                                   name: nftForIndex.name,
-                                   rating: nftForIndex.rating,
-                                   price: nftForIndex.price,
-                                   isLiked: self.isLiked(nftForIndex.id),
-                                   isAddedToCart: self.isAddedToCart(nftForIndex.id),
-                                   id: nftForIndex.id
+        return CollectionCellModel(
+            image: URL(string: nftForIndex.images[0])!,
+            name: nftForIndex.name,
+            rating: nftForIndex.rating,
+            price: nftForIndex.price,
+            isLiked: self.isLiked(nftForIndex.id),
+            isAddedToCart: self.isAddedToCart(nftForIndex.id),
+            id: nftForIndex.id
         )
     }
     
@@ -59,7 +60,7 @@ final class CollectionDetailsViewControllerPresenter {
         nftModel.nfts.forEach { loadNftById(id: $0) }
     }
     
-    func setOnLoadCompletion(_ completion: @escaping ([Nft]) -> Void) {
+    func setOnLoadCompletion(_ completion: @escaping ([NFTModel]) -> Void) {
         onLoadCompletion = completion
     }
     
@@ -131,7 +132,7 @@ final class CollectionDetailsViewControllerPresenter {
         completion(.success(isAdded))
     }
     
-    private func handleCartChange(nftID: String, cart: Cart, completion: @escaping (Result<Bool, Error>) -> Void) {
+    private func handleCartChange(nftID: String, cart: OrderModel , completion: @escaping (Result<Bool, Error>) -> Void) {
         var updatedCart = cart.nfts
         let isAdded: Bool
         
@@ -169,7 +170,17 @@ final class CollectionDetailsViewControllerPresenter {
             guard let self = self else { return }
             switch result {
             case .success(let nft):
-                self.loadedNFTs.append(nft)
+                let nftModel = NFTModel(
+                    createdAt: nft.createdAt,
+                    name: nft.name,
+                    images: nft.images.map { $0.absoluteString },
+                    rating: nft.rating,
+                    description: nft.description,
+                    price: nft.price,
+                    author: nft.author,
+                    id: nft.id
+                )
+                self.loadedNFTs.append(nftModel)
                 self.onLoadCompletion?(self.loadedNFTs)
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
