@@ -29,7 +29,7 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
     private lazy var sortButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(named: "SortButton.png")?.withTintColor(.blackDayText)
+        let image = UIImage(named: "sort")?.withTintColor(.blackDayText)
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(sortBttnTapped), for: .touchUpInside)
         return button

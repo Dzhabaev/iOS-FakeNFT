@@ -2,7 +2,7 @@
 //  NetworkConstants.swift
 //  FakeNFT
 //
-//  Created by Сергей on 06.05.2024.
+//  Created by Chingiz on 23.04.2024.
 //
 
 import Foundation
@@ -13,6 +13,8 @@ struct NetworkConstants {
     static let baseURL = "https://d5dn3j2ouj72b0ejucbl.apigw.yandexcloud.net"
     static let acceptKey = "Accept"
     static let acceptValue = "application/json"
+    static let contentTypeKey = "Content-Type"
+    static let contentTypeValue = "application/x-www-form-urlencoded"
     static let contentType = "Content-Type"
     static let contentValue = "application/x-www-form-urlencoded"
 }

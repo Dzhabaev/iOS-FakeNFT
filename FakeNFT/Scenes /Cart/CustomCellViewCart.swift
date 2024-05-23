@@ -23,7 +23,7 @@ final class CustomCellViewCart: UITableViewCell {
     private lazy var deleteButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(named: "CartDelete.png")?.withTintColor(.blackDayText)
+        let image = UIImage(named: "cartDelete")?.withTintColor(.blackDayText)
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(deleteBttnTapped), for: .touchUpInside)
         return button

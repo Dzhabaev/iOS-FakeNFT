@@ -7,6 +7,11 @@
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
+"alert.sorting" = "Сортировка";
+"alert.byName" = "По названию";
+"alert.byQuantity" = "По количеству NFT";
+"alert.close" = "Закрыть";
+"authorCollectionLabel.text" = "Автор коллекции:";
 "Cart.price" = "Цена";
 "Cart.payBttn" = "К оплате";
 "Cart.deleteBttn" = "Удалить";
