@@ -359,6 +359,7 @@ extension CollectionDetailsViewController: CollectionDetailsNftCardCellDelegate 
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 print(error)
+                UIBlockingProgressHUD.dismiss()
             }
         }
     }
@@ -371,6 +372,7 @@ extension CollectionDetailsViewController: CollectionDetailsNftCardCellDelegate 
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
                 print(error)
+                UIBlockingProgressHUD.dismiss()
             }
         }
     }

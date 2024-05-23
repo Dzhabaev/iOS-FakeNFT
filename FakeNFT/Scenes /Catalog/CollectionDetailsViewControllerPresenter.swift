@@ -71,37 +71,11 @@ final class CollectionDetailsViewControllerPresenter {
             defer { UIBlockingProgressHUD.dismiss() }
             switch result {
             case .success(let model):
-                var likes = model.likes
-                let isAdded: Bool
-                
-                if likes.contains(nftID) {
-                    likes.removeAll { $0 == nftID }
-                    isAdded = false
-                } else {
-                    likes.append(nftID)
-                    isAdded = true
-                }
-                
-                self.userNFTService.changeLike(newLikes: likes, profile: model) { [weak self] result in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success:
-                            NotificationCenter.default.post(name: NSNotification.Name("LikeUpdated"), object: nil, userInfo: ["nftID": nftID, "isAdded": isAdded])
-                            completion(.success(isAdded))
-                        case .failure(let error):
-                            let errorModel = self.makeErrorModel(error) { self.changeLike(nftID: nftID, completion: completion) }
-                            self.viewController?.showError(errorModel)
-                            completion(.failure(error))
-                        }
-                    }
-                }
+                self.handleLikeChange(nftID: nftID, profile: model, completion: completion)
             case .failure(let error):
-                DispatchQueue.main.async {
-                    let errorModel = self.makeErrorModel(error) { self.changeLike(nftID: nftID, completion: completion) }
-                    self.viewController?.showError(errorModel)
-                    completion(.failure(error))
-                }
+                let errorModel = self.makeErrorModel(error) { self.changeLike(nftID: nftID, completion: completion) }
+                self.viewController?.showError(errorModel)
+                completion(.failure(error))
             }
         }
     }
@@ -113,36 +87,38 @@ final class CollectionDetailsViewControllerPresenter {
             guard let self = self else { return }
             defer { UIBlockingProgressHUD.dismiss() }
             switch result {
-            case .success(let model):
-                var cart = model.nfts
-                let id = nftID
-                var isAdded = false
-                
-                if cart.contains(id) {
-                    cart.removeAll { $0 == id }
-                    isAdded = false
-                } else {
-                    cart.append(id)
-                    isAdded = true
-                }
-                
-                self.userNFTService.changeCart(newCart: cart, cart: model) { [weak self] result in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success:
-                            NotificationCenter.default.post(name: NSNotification.Name("CartUpdated"), object: nil, userInfo: [:])
-                            completion(.success(isAdded))
-                        case .failure(let error):
-                            let errorModel = self.makeErrorModel(error) { self.changeCart(nftID: nftID, completion: completion) }
-                            self.viewController?.showError(errorModel)
-                            completion(.failure(error))
-                        }
-                    }
-                }
+            case .success(let cart):
+                self.handleCartChange(nftID: nftID, cart: cart, completion: completion)
             case .failure(let error):
-                DispatchQueue.main.async {
-                    let errorModel = self.makeErrorModel(error) { self.changeCart(nftID: nftID, completion: completion) }
+                let errorModel = self.makeErrorModel(error) { self.changeCart(nftID: nftID, completion: completion) }
+                self.viewController?.showError(errorModel)
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func handleLikeChange(nftID: String, profile: ProfileModel, completion: @escaping (Result<Bool, Error>) -> Void) {
+        var likes = profile.likes
+        let isAdded: Bool
+        
+        if likes.contains(nftID) {
+            likes.removeAll { $0 == nftID }
+            isAdded = false
+        } else {
+            likes.append(nftID)
+            isAdded = true
+        }
+        
+        userNFTService.changeLike(newLikes: likes, profile: profile) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self.handleLikeSuccess(nftID: nftID, isAdded: isAdded, completion: completion)
+                case .failure(let error):
+                    let errorModel = self.makeErrorModel(error) { self.handleLikeChange(nftID: nftID, profile: profile, completion: completion) }
                     self.viewController?.showError(errorModel)
                     completion(.failure(error))
                 }
@@ -150,7 +126,42 @@ final class CollectionDetailsViewControllerPresenter {
         }
     }
     
-    // MARK: - Private Methods
+    private func handleLikeSuccess(nftID: String, isAdded: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
+        NotificationCenter.default.post(name: NSNotification.Name("LikeUpdated"), object: nil, userInfo: ["nftID": nftID, "isAdded": isAdded])
+        completion(.success(isAdded))
+    }
+    
+    private func handleCartChange(nftID: String, cart: Cart, completion: @escaping (Result<Bool, Error>) -> Void) {
+        var updatedCart = cart.nfts
+        let isAdded: Bool
+        
+        if updatedCart.contains(nftID) {
+            updatedCart.removeAll { $0 == nftID }
+            isAdded = false
+        } else {
+            updatedCart.append(nftID)
+            isAdded = true
+        }
+        
+        userNFTService.changeCart(newCart: updatedCart, cart: cart) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self.handleCartSuccess(isAdded: isAdded, completion: completion)
+                case .failure(let error):
+                    let errorModel = self.makeErrorModel(error) { self.handleCartChange(nftID: nftID, cart: cart, completion: completion) }
+                    self.viewController?.showError(errorModel)
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    private func handleCartSuccess(isAdded: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
+        NotificationCenter.default.post(name: NSNotification.Name("CartUpdated"), object: nil, userInfo: [:])
+        completion(.success(isAdded))
+    }
     
     private func loadNftById(id: String) {
         UIBlockingProgressHUD.show()
