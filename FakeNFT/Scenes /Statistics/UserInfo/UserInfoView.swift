@@ -124,7 +124,7 @@ final class UserInfoView: UIViewController & UserInfoViewControllerProtocol {
         let url = URL(string: object.avatar)
         nameLabel.text = presenter.object?.name
         descriptonText.text = presenter.object?.description
-        avatarImage.kf.setImage(with: url)
+        avatarImage.kf.setImage(with: url, placeholder: UIImage(named: "stub"))
     }
 
     @objc private func backButtonTapped() {

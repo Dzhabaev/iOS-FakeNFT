@@ -28,6 +28,8 @@ final class UserNFTCollectionView: UIViewController & UserNFTCollectionViewProto
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private let refreshControl = UIRefreshControl()
 
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -70,7 +72,8 @@ final class UserNFTCollectionView: UIViewController & UserNFTCollectionViewProto
         [nftCollection, emptyCollectionLabel, activityIndicator].forEach {
             view.addSubview($0)
         }
-        activityIndicator.center = view.center
+        refreshControl.addTarget(self, action: #selector(refreshPulled), for: .valueChanged)
+        nftCollection.refreshControl = refreshControl
     }
 
     private func setConstraints() {
@@ -97,7 +100,13 @@ final class UserNFTCollectionView: UIViewController & UserNFTCollectionViewProto
     }
 
     @objc func customBackAction() {
+        UIBlockingProgressHUD.dismiss()
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func refreshPulled() {
+        presenter.getNFT()
+        refreshControl.endRefreshing()
     }
 }
 

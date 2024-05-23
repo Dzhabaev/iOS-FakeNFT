@@ -15,6 +15,7 @@ protocol UserNFTPresenterProtocol: AnyObject {
     var cart: OrderModel? { get set }
     var nft: NFTModel? { get set }
     func viewDidLoad()
+    func getNFT()
     func changeLike(nft: NFTModel, completion: @escaping (Result<Bool, Error>) -> Void)
     func changeCart(nft: NFTModel, completion: @escaping (Result<Bool, Error>) -> Void)
 }

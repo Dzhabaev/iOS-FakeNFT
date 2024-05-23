@@ -97,7 +97,8 @@ final class RatingCell: UICollectionViewCell {
             avatarImage.widthAnchor.constraint(equalToConstant: 28),
             nameLabel.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 8),
-            nftCountLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 16),
+            nameLabel.widthAnchor.constraint(equalToConstant: 186),
+//            nftCountLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 16),
             nftCountLabel.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
             nftCountLabel.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -16)
         ])
