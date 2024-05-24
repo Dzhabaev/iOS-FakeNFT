@@ -2,7 +2,7 @@
 //  CollectionCellModel.swift
 //  FakeNFT
 //
-//  Created by Chingiz on 09.05.2024.
+//  Created by Сергей on 24.05.2024.
 //
 
 import Foundation

@@ -56,7 +56,7 @@ final class ProfileNameCell: UITableViewCell, ReuseIdentifying {
         nameTextField.text = ""
     }
     
-    func update(_ profile: Profile?) {
+    func update(_ profile: ProfileModel?) {
         nameTextField.text = profile?.name ?? ""
     }
     

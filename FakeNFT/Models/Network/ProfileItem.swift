@@ -1,8 +1,8 @@
 //
-//  ProfileItemService.swift
+//  ProfileItem.swift
 //  FakeNFT
 //
-//  Created by Chalkov on 07.05.2024.
+//  Created by Сергей on 24.05.2024.
 //
 
 import Foundation

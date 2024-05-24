@@ -19,12 +19,12 @@ protocol ProfilePresenterProtocol: AnyObject {
     func aboutCellSelected()
 
     func fetchProfile()
-    func getProfile() -> Profile?
+    func getProfile() -> ProfileModel?
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
     
-    private var profile: Profile?
+    private var profile: ProfileModel?
     
     weak var view: ProfileViewControllerProtocol?
     var provider: ProfileProviderProtocol? 
@@ -54,7 +54,7 @@ extension ProfilePresenter {
         }
     }
     
-    func getProfileItems(_ profile: Profile) -> [ProfileItem] {
+    func getProfileItems(_ profile: ProfileModel) -> [ProfileItem] {
         let data = [
             ProfileItem(name: "Мои NFT (\(profile.nfts.count))"),
             ProfileItem(name: "Избранные NFT (\(profile.likes.count))"),
@@ -63,7 +63,7 @@ extension ProfilePresenter {
         return data
     }
     
-    func getProfile() -> Profile? {
+    func getProfile() -> ProfileModel? {
        return profile
     }
     
@@ -92,14 +92,14 @@ extension ProfilePresenter: FavoritesDelegate {
         var likes = profile.likes
         likes.remove(at: deletedIndex)
         
-        let newProfile = Profile(
-            id: profile.id,
+        let newProfile = ProfileModel(
             name: profile.name,
             avatar: profile.avatar,
             description: profile.description,
             website: profile.website,
             nfts: profile.nfts,
-            likes: likes
+            likes: likes,
+            id: profile.id
         )
         view?.showProfile(newProfile)
             

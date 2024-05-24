@@ -2,12 +2,10 @@
 //  CatalogModel.swift
 //  FakeNFT
 //
-//  Created by Chingiz on 22.04.2024.
+//  Created by Сергей on 24.05.2024.
 //
 
 import Foundation
-
-// MARK: - CatalogModel
 
 struct CatalogModel: Codable {
     let name: String

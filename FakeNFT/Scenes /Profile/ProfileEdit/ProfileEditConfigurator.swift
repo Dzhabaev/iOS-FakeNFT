@@ -9,7 +9,7 @@ import UIKit
 
 final class ProfileEditConfigurator {
     
-    func configure(_ profile: Profile?) -> ProfileEditViewController {
+    func configure(_ profile: ProfileModel?) -> ProfileEditViewController {
         
         let profileEditProvider = ProfileProvider(networkClient: DefaultNetworkClient())
         let profileEditVC = ProfileEditViewController()

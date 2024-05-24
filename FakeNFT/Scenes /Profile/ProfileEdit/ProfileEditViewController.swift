@@ -12,7 +12,7 @@ protocol ProfileEditViewControllerProtocol: AnyObject {
     var presenter: ProfileEditPresenterProtocol? { get set }
     
     func closeProfileEditScreen()
-    func showSaveAlert(_ profile: Profile)
+    func showSaveAlert(_ profile: ProfileModel)
 }
 
 final class ProfileEditViewController: UIViewController, ProfileEditViewControllerProtocol {
@@ -69,7 +69,7 @@ extension ProfileEditViewController {
         dismiss(animated: true)
     }
     
-    func showSaveAlert(_ profile: Profile) {
+    func showSaveAlert(_ profile: ProfileModel) {
         let alert = UIAlertController(title: "Сохранить данные профиля?", message: "", preferredStyle: .alert)
          
         alert.addAction(UIAlertAction(title: "Да", style: .default, handler: { [weak self] action in

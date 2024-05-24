@@ -11,19 +11,19 @@ protocol ProfileEditPresenterProtocol: AnyObject {
     var view: ProfileEditViewControllerProtocol? { get set }
 
     func closeButtonTapped()
-    func alertSaveOkTapped(_ profile: Profile?)
+    func alertSaveOkTapped(_ profile: ProfileModel?)
     func profileNameTextFieldChanged(_ nameText: String)
     func profileDescriptionTextFieldChanged(_ descriptionText: String)
     func profileWebsiteTextFieldChanged(_ websiteText: String)
 
-    func updateProfileOnServer(_ profile: Profile?)
+    func updateProfileOnServer(_ profile: ProfileModel?)
     
-    func getProfile() -> Profile?
+    func getProfile() -> ProfileModel?
 }
 
 final class ProfileEditPresenter: ProfileEditPresenterProtocol {
 
-    var profile: Profile?
+    var profile: ProfileModel?
     
     weak var view: ProfileEditViewControllerProtocol?
     var provider: ProfileProviderProtocol?
@@ -32,7 +32,7 @@ final class ProfileEditPresenter: ProfileEditPresenterProtocol {
 //MARK: - ProfileEditPresenterProtocol
 extension ProfileEditPresenter {
     
-    func getProfile() -> Profile? {
+    func getProfile() -> ProfileModel? {
         return profile
     }
 
@@ -53,11 +53,11 @@ extension ProfileEditPresenter {
         profile = profile?.updateWebsite(websiteText)
     }
     
-    func alertSaveOkTapped(_ profile: Profile?) {
+    func alertSaveOkTapped(_ profile: ProfileModel?) {
         updateProfileOnServer(profile)
     }
     
-    func updateProfileOnServer(_ profile: Profile?) {
+    func updateProfileOnServer(_ profile: ProfileModel?) {
         
         provider?.updateProfile(profile) { [weak self] profile in
             
