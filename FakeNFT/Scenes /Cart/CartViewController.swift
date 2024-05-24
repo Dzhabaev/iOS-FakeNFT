@@ -224,12 +224,14 @@ final class CartViewController: UIViewController & CartViewControllerProtocol {
 
     func showEmptyMessage() {
         emptyLabel.isHidden = false
+        sortButton.isHidden = true
         priceView.isHidden = true
         tableView.isHidden = true
     }
 
     func hideEmptyMessage() {
         emptyLabel.isHidden = true
+        sortButton.isHidden = false
         priceView.isHidden = false
         tableView.isHidden = false
     }
