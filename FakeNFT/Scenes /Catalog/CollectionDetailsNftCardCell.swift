@@ -32,7 +32,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 12
         imageView.layer.masksToBounds = true
-        imageView.image = UIImage(named: "NFTcard")
         return imageView
     }()
     

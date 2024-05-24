@@ -19,7 +19,6 @@ final class CustomCellCollectionViewCart: UICollectionViewCell {
         image.contentMode = .scaleAspectFill
         image.backgroundColor = .blackUniversal
         image.layer.cornerRadius = 6
-        image.image = UIImage(named: "Vector")
         return image
     }()
 

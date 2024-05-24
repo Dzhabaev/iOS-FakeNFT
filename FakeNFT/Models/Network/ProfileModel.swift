@@ -45,7 +45,7 @@ struct ProfileModel: Codable {
                 name: name,
                 avatar: avatar,
                 description: description,
-                website: website,
+                website: newWebsite,
                 nfts: nfts,
                 likes: likes,
                 id: id

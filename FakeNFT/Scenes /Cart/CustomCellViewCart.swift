@@ -35,7 +35,6 @@ final class CustomCellViewCart: UITableViewCell {
         image.layer.masksToBounds = true
         image.contentMode = .scaleToFill
         image.layer.cornerRadius = 12
-        image.image = UIImage(named: "mockCart")?.withTintColor(.blackDayText)
         return image
     }()
 
