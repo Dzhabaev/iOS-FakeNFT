@@ -35,10 +35,25 @@ extension ProfilePresenter {
         
     func viewDidLoad() {
         fetchProfile()
+        observe()
     }
     
     func editBarButtonTapped() {
         view?.navigateToProfileEditScreen()
+    }
+    
+    func observe() {
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("ProfileUpdatedNotification"),
+            object: nil,
+            queue: nil) { [weak self] notification in
+            
+            if let data = notification.userInfo as? [String: ProfileModel] {
+                let profile = data["profile"]
+                self?.profile = profile
+                self?.view?.showProfile(profile)
+            }
+        }
     }
     
     func fetchProfile() {

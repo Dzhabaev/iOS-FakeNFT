@@ -47,8 +47,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         setupNavigationBar()
         setupViews()
         setupConstraints()
-        
-        observe()
+
         presenter?.viewDidLoad()
     }
 }
@@ -56,28 +55,14 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
 //MARK: - Observe
 extension ProfileViewController {
     
-    func observe() {
-        NotificationCenter.default.addObserver(
-            forName: Notification.Name("ProfileUpdatedNotification"),
-            object: nil,
-            queue: nil) { notification in
-            
-            if let data = notification.userInfo as? [String: ProfileModel] {
-                let profile = data["profile"]
-                self.showProfile(profile)
-                self.tableView.reloadData()
-            }
-        }
-    }
+    
 }
 
 //MARK: - ProfileViewControllerProtocol
 extension ProfileViewController {
     
     func showProfile(_ profile: ProfileModel?) {
-        
         ProgressHUD.dismiss()
-
         profileView.update(profile)
         tableView.reloadData()
     }
