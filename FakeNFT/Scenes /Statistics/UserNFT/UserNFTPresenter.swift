@@ -10,22 +10,23 @@ import Foundation
 protocol UserNFTPresenterProtocol: AnyObject {
     var view: UserNFTCollectionViewProtocol? { get set }
     var nftsIDs: [String] { get set }
-    var visibleNFT: [NFTModel] { get set }
+    var visibleNFT: [Nft] { get set }
     var profile: ProfileModel? { get set }
-    var cart: OrderModel? { get set }
-    var nft: NFTModel? { get set }
+    var cart: Cart? { get set }
+    var nft: Nft? { get set }
     func viewDidLoad()
-    func changeLike(nft: NFTModel, completion: @escaping (Result<Bool, Error>) -> Void)
-    func changeCart(nft: NFTModel, completion: @escaping (Result<Bool, Error>) -> Void)
+    func getNFT()
+    func changeLike(nft: Nft, completion: @escaping (Result<Bool, Error>) -> Void)
+    func changeCart(nft: Nft, completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
 final class UserNFTPresenter: UserNFTPresenterProtocol {
 
     var nftsIDs: [String] = []
-    var visibleNFT: [NFTModel] = []
+    var visibleNFT: [Nft] = []
     var profile: ProfileModel?
-    var cart: OrderModel?
-    var nft: NFTModel?
+    var cart: Cart?
+    var nft: Nft?
 
     weak var view: UserNFTCollectionViewProtocol?
 
@@ -73,7 +74,7 @@ final class UserNFTPresenter: UserNFTPresenterProtocol {
         }
     }
 
-    func changeLike(nft: NFTModel, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func changeLike(nft: Nft, completion: @escaping (Result<Bool, Error>) -> Void) {
         UIBlockingProgressHUD.show()
         service.getProfile { result in
             switch result {
@@ -106,7 +107,7 @@ final class UserNFTPresenter: UserNFTPresenterProtocol {
         }
     }
 
-    func changeCart(nft: NFTModel, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func changeCart(nft: Nft, completion: @escaping (Result<Bool, Error>) -> Void) {
         UIBlockingProgressHUD.show()
         service.getCart { result in
             switch result {

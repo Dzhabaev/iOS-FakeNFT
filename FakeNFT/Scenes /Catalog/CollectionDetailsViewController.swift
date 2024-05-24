@@ -24,7 +24,7 @@ final class CollectionDetailsViewController: UIViewController, ErrorView {
     // MARK: - Private Properties
     
     private let presenter: CollectionDetailsViewControllerPresenter
-    private var nfts: [NFTModel] = []
+    private var nfts: [Nft] = []
     private var nftCollectionViewHeightConstraint: NSLayoutConstraint?
     
     private lazy var scrollView: UIScrollView = {

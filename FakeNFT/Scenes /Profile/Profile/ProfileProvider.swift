@@ -9,8 +9,8 @@ import Foundation
 
 
 protocol ProfileProviderProtocol {
-    func getProfile(completion: @escaping (Profile?) -> Void)
-    func updateProfile(_ profile: Profile?, completion: @escaping (Profile?) -> Void)
+    func getProfile(completion: @escaping (ProfileModel?) -> Void)
+    func updateProfile(_ profile: ProfileModel?, completion: @escaping (ProfileModel?) -> Void)
 }
 
 final class ProfileProvider: ProfileProviderProtocol {
@@ -21,9 +21,9 @@ final class ProfileProvider: ProfileProviderProtocol {
         self.networkClient = networkClient
     }
     
-    func getProfile(completion: @escaping (Profile?) -> Void) {
+    func getProfile(completion: @escaping (ProfileModel?) -> Void) {
         
-        networkClient.send(request: ProfileRequest(), type: Profile.self) { result in
+        networkClient.send(request: ProfileRequest(), type: ProfileModel.self) { result in
 
             DispatchQueue.main.async {
                 switch result {
@@ -37,7 +37,7 @@ final class ProfileProvider: ProfileProviderProtocol {
         }
     }
     
-    func updateProfile(_ profile: Profile?, completion: @escaping (Profile?) -> Void) {
+    func updateProfile(_ profile: ProfileModel?, completion: @escaping (ProfileModel?) -> Void) {
         guard let profile else { return }
         
         var encodedLikes = profile.likes.map { String($0) }.joined(separator: ",")
@@ -48,7 +48,7 @@ final class ProfileProvider: ProfileProviderProtocol {
         let profileData = "name=\(profile.name)&description=\(profile.description)&website=\(profile.website)&avatar=\(profile.avatar)&likes=\(encodedLikes)"
         let request = ProfileUpdateRequest(profileData)
         
-        networkClient.send(request: request, type: Profile.self) { result in
+        networkClient.send(request: request, type: ProfileModel.self) { result in
             
             DispatchQueue.main.async {
                 switch result {

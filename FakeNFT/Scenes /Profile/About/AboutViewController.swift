@@ -10,7 +10,7 @@ import UIKit
 final class AboutViewController: UIViewController {
 
     private lazy var backButton = UIBarButtonItem(
-        image: UIImage(named: "back"),
+        image: UIImage(named: "BackBttnCart"),
         style: .plain,
         target: self,
         action: #selector(didTapBackButton)

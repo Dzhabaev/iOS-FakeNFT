@@ -28,6 +28,8 @@ final class UserNFTCollectionView: UIViewController & UserNFTCollectionViewProto
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private let refreshControl = UIRefreshControl()
 
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -70,7 +72,8 @@ final class UserNFTCollectionView: UIViewController & UserNFTCollectionViewProto
         [nftCollection, emptyCollectionLabel, activityIndicator].forEach {
             view.addSubview($0)
         }
-        activityIndicator.center = view.center
+        refreshControl.addTarget(self, action: #selector(refreshPulled), for: .valueChanged)
+        nftCollection.refreshControl = refreshControl
     }
 
     private func setConstraints() {
@@ -97,7 +100,13 @@ final class UserNFTCollectionView: UIViewController & UserNFTCollectionViewProto
     }
 
     @objc func customBackAction() {
+        UIBlockingProgressHUD.dismiss()
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func refreshPulled() {
+        presenter.getNFT()
+        refreshControl.endRefreshing()
     }
 }
 
@@ -134,7 +143,14 @@ extension UserNFTCollectionView: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: 16, bottom: 8, right: 16)
+        UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        9
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        8
     }
 }
 
@@ -150,7 +166,7 @@ extension UserNFTCollectionView: UINavigationControllerDelegate {
 
 extension UserNFTCollectionView: UserNFTCellDelegate {
 
-    func addToCartButtonClicked(_ cell: UserNFTCollectionCell, nft: NFTModel) {
+    func addToCartButtonClicked(_ cell: UserNFTCollectionCell, nft: Nft) {
         presenter.changeCart(nft: nft) { result in
             switch result {
             case .success(let isAdded):
@@ -162,7 +178,7 @@ extension UserNFTCollectionView: UserNFTCellDelegate {
         }
     }
 
-    func addFavouriteButtonClicked(_ cell: UserNFTCollectionCell, nft: NFTModel) {
+    func addFavouriteButtonClicked(_ cell: UserNFTCollectionCell, nft: Nft) {
         presenter.changeLike(nft: nft) { result in
             switch result {
             case .success(let isLiked):

@@ -35,7 +35,6 @@ final class CustomCellViewCart: UITableViewCell {
         image.layer.masksToBounds = true
         image.contentMode = .scaleToFill
         image.layer.cornerRadius = 12
-        image.image = UIImage(named: "mockCart")?.withTintColor(.blackDayText)
         return image
     }()
 
@@ -44,7 +43,7 @@ final class CustomCellViewCart: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.heightAnchor.constraint(equalToConstant: 12).isActive = true
-        image.image = UIImage(named: "starsActive")
+        image.image = UIImage(named: "starFilled")
         return image
     }()
 
@@ -53,7 +52,7 @@ final class CustomCellViewCart: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.heightAnchor.constraint(equalToConstant: 12).isActive = true
-        image.image = UIImage(named: "starsNoActive")
+        image.image = UIImage(named: "starEmpty")
         return image
     }()
 
@@ -62,7 +61,7 @@ final class CustomCellViewCart: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.heightAnchor.constraint(equalToConstant: 12).isActive = true
-        image.image = UIImage(named: "starsNoActive")
+        image.image = UIImage(named: "starEmpty")
         return image
     }()
 
@@ -71,7 +70,7 @@ final class CustomCellViewCart: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
 
-        image.image = UIImage(named: "starsNoActive")
+        image.image = UIImage(named: "starEmpty")
         return image
     }()
 
@@ -80,7 +79,7 @@ final class CustomCellViewCart: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.heightAnchor.constraint(equalToConstant: 12).isActive = true
-        image.image = UIImage(named: "starsNoActive")
+        image.image = UIImage(named: "starEmpty")
         return image
     }()
 
@@ -226,32 +225,32 @@ final class CustomCellViewCart: UITableViewCell {
     }
 
     private func setRating(_ rating: Int) {
-        firstStar.image = UIImage(named: "starsNoActive")
-        secondStar.image = UIImage(named: "starsNoActive")
-        thirdStar.image = UIImage(named: "starsNoActive")
-        fourthStar.image = UIImage(named: "starsNoActive")
-        fifthStar.image = UIImage(named: "starsNoActive")
+        firstStar.image = UIImage(named: "starEmpty")
+        secondStar.image = UIImage(named: "starEmpty")
+        thirdStar.image = UIImage(named: "starEmpty")
+        fourthStar.image = UIImage(named: "starEmpty")
+        fifthStar.image = UIImage(named: "starEmpty")
         switch rating {
         case 1:
-            firstStar.image = UIImage(named: "starsActive")
+            firstStar.image = UIImage(named: "starFilled")
         case 2:
-            firstStar.image = UIImage(named: "starsActive")
-            secondStar.image = UIImage(named: "starsActive")
+            firstStar.image = UIImage(named: "starFilled")
+            secondStar.image = UIImage(named: "starFilled")
         case 3:
-            firstStar.image = UIImage(named: "starsActive")
-            secondStar.image = UIImage(named: "starsActive")
-            thirdStar.image = UIImage(named: "starsActive")
+            firstStar.image = UIImage(named: "starFilled")
+            secondStar.image = UIImage(named: "starFilled")
+            thirdStar.image = UIImage(named: "starFilled")
         case 4:
-            firstStar.image = UIImage(named: "starsActive")
-            secondStar.image = UIImage(named: "starsActive")
-            thirdStar.image = UIImage(named: "starsActive")
-            fourthStar.image = UIImage(named: "starsActive")
+            firstStar.image = UIImage(named: "starFilled")
+            secondStar.image = UIImage(named: "starFilled")
+            thirdStar.image = UIImage(named: "starFilled")
+            fourthStar.image = UIImage(named: "starFilled")
         case 5:
-            firstStar.image = UIImage(named: "starsActive")
-            secondStar.image = UIImage(named: "starsActive")
-            thirdStar.image = UIImage(named: "starsActive")
-            fourthStar.image = UIImage(named: "starsActive")
-            fifthStar.image = UIImage(named: "starsActive")
+            firstStar.image = UIImage(named: "starFilled")
+            secondStar.image = UIImage(named: "starFilled")
+            thirdStar.image = UIImage(named: "starFilled")
+            fourthStar.image = UIImage(named: "starFilled")
+            fifthStar.image = UIImage(named: "starFilled")
         default:
             break
         }

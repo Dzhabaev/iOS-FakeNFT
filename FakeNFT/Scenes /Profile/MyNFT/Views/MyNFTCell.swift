@@ -22,7 +22,7 @@ final class MyNFTCell: UITableViewCell, ReuseIdentifying {
     private lazy var likeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "like-off")
+        imageView.image = UIImage(named: "favoutiteImage")
         imageView.widthAnchor.constraint(equalToConstant: 42).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 42).isActive = true
         return imageView

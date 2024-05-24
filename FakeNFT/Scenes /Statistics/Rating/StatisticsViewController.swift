@@ -17,11 +17,14 @@ final class StatisticsViewController: UIViewController & StatisticsViewControlle
 
     lazy var presenter: StatisticPresenterProtocol = {
         let presenter = StatisticsPresenter()
+        presenter.delegate = self
         presenter.view = self
         return presenter
     }()
 
     // MARK: - Private
+    
+    private let refreshControl = UIRefreshControl()
 
     private lazy var ratingCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -58,6 +61,8 @@ final class StatisticsViewController: UIViewController & StatisticsViewControlle
     private func setViews() {
         view.backgroundColor = .systemBackground
         view.addSubview(ratingCollectionView)
+        refreshControl.addTarget(self, action: #selector(refreshPulled), for: .valueChanged)
+        ratingCollectionView.refreshControl = refreshControl
     }
 
     private func setConstraints() {
@@ -105,6 +110,11 @@ final class StatisticsViewController: UIViewController & StatisticsViewControlle
     @objc private func sortButtontapped() {
         presenter.createSortAlert(view: self, collection: ratingCollectionView)
     }
+    
+    @objc private func refreshPulled() {
+        presenter.getStatistic()
+        refreshControl.endRefreshing()
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -147,5 +157,12 @@ extension StatisticsViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         checkCompletedList(indexPath)
+    }
+}
+
+
+extension StatisticsViewController: StatisticPresenterDelegate {
+    func createErrorAlert() {
+        presenter.createErrorAlert(view: self)
     }
 }

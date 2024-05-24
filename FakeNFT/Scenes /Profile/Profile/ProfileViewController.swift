@@ -12,7 +12,7 @@ protocol ProfileViewControllerProtocol: AnyObject {
     
     var presenter: ProfilePresenterProtocol? { get set }
 
-    func showProfile(_ profile: Profile?)
+    func showProfile(_ profile: ProfileModel?)
     func showProfileItems(_ profileItems: [ProfileItem])
     func showProgressHUB()
     func dismissProgressHUB()
@@ -62,7 +62,7 @@ extension ProfileViewController {
             object: nil,
             queue: nil) { notification in
             
-            if let data = notification.userInfo as? [String: Profile] {
+            if let data = notification.userInfo as? [String: ProfileModel] {
                 let profile = data["profile"]
                 self.showProfile(profile)
                 self.tableView.reloadData()
@@ -74,7 +74,7 @@ extension ProfileViewController {
 //MARK: - ProfileViewControllerProtocol
 extension ProfileViewController {
     
-    func showProfile(_ profile: Profile?) {
+    func showProfile(_ profile: ProfileModel?) {
         
         ProgressHUD.dismiss()
 

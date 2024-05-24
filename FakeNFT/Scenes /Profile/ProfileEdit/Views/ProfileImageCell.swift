@@ -66,7 +66,7 @@ final class ProfileImageCell: UITableViewCell, ReuseIdentifying {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(_ profile: Profile?) {
+    func update(_ profile: ProfileModel?) {
 
         guard let url = URL.init(string: profile?.avatar ?? "") else { return }
         KingfisherManager.shared.retrieveImage(with: url) { result in

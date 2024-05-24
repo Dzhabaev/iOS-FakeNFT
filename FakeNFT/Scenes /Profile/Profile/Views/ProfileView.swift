@@ -69,7 +69,7 @@ final class ProfileView: UIView {
 
 extension ProfileView {
     
-    func update(_ profile: Profile?) {
+    func update(_ profile: ProfileModel?) {
         
         guard let profile else { return }
         

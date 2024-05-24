@@ -8,11 +8,16 @@
 import UIKit
 import Alamofire
 
+protocol StatisticPresenterDelegate: AnyObject {
+    func createErrorAlert()
+}
+
 protocol StatisticPresenterProtocol: AnyObject {
 
     var view: StatisticsViewControllerProtocol? { get set }
     var objects: [Person] { get set }
     var newObjects: [Person] { get set }
+    var delegate: StatisticPresenterDelegate? { get }
     func viewDidLoad()
     func getStatistic()
     func createSortAlert(view: UIViewController, collection: UICollectionView)
@@ -21,7 +26,9 @@ protocol StatisticPresenterProtocol: AnyObject {
 }
 
 final class StatisticsPresenter: StatisticPresenterProtocol {
-
+    
+    weak var delegate: StatisticPresenterDelegate?
+    
     private let statisticService = StatisticService.shared
     let didChangeNotification = Notification.Name(rawValue: "StatisticServiceDidChange")
     private var imageListServiceObserver: NSObjectProtocol?
@@ -112,6 +119,7 @@ final class StatisticsPresenter: StatisticPresenterProtocol {
             case .success(let user):
                 self.newObjects.append(contentsOf: user)
             case .failure(let error):
+                self.delegate?.createErrorAlert()
                 print(error.localizedDescription)
             }
         }

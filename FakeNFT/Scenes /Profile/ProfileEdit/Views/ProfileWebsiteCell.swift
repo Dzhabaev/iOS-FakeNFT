@@ -62,7 +62,7 @@ final class ProfileWebsiteCell: UITableViewCell, ReuseIdentifying {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(_ profile: Profile?) {
+    func update(_ profile: ProfileModel?) {
         websiteTextField.text = profile?.website ?? ""
     }
     

@@ -41,7 +41,7 @@ final class ProfileDescriptionCell: UITableViewCell, ReuseIdentifying {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(_ profile: Profile?) {
+    func update(_ profile: ProfileModel?) {
         descriptionTextView.text = profile?.description ?? ""
     }
     

@@ -49,7 +49,7 @@ extension MyNFTPresenter: MyNFTPresenterProtocol {
                 } else {
                     applySortType()
                 }
-            case .failure(let error):
+            case .failure(_):
                 view?.dismissProgressHUB()
             }
         }

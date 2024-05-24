@@ -23,7 +23,7 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
     // MARK: - Private Properties
     
     var itemId: String = ""
-    var nft: NFTModel?
+    var nft: Nft?
     private var isItemInCart: Bool = false
     private var isItemLiked: Bool = false
     
@@ -32,7 +32,6 @@ final class CollectionDetailsNftCardCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 12
         imageView.layer.masksToBounds = true
-        imageView.image = UIImage(named: "NFTcard")
         return imageView
     }()
     
