@@ -207,6 +207,7 @@
 ## Статистика
 [Files/StatisticScreenCast.MP4](https://github.com/Dzhabaev/iOS-FakeNFT/blob/d18d130ce482d7b620f8bb4911098976124e03d1/Files/StatisticScreenCast.MP4)
 ## Каталог
+![ScreencastFakeNFTCatalog](https://github.com/Dzhabaev/iOS-FakeNFT/assets/137287126/b3888777-5e1c-42c5-b587-bf2e7dbedd75)
 ## Профиль
 https://github.com/Dzhabaev/iOS-FakeNFT/blob/profile/Files/Profile-Demo.mp4
 ## Корзина
